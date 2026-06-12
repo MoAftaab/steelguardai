@@ -82,7 +82,11 @@
 
 ## 1. System Architecture
 
-![System Architecture Diagram](docs/screenshots/architecture_diagram.png)
+![System Architecture Overview](docs/screenshots/architecture_diagram.png)
+
+### 1.1 Research-Level Technical Blueprint
+
+![Research-Level Technical Blueprint](docs/screenshots/research_architecture.png)
 
 SteelGuard AI uses a decoupled, modern architecture comprised of a high-performance REST API backend and a responsive dark-theme operations dashboard.
 
@@ -790,6 +794,16 @@ npm run build
 ---
 
 ## 9. Demo Screenshots
+
+### System Architecture Overview
+A high-level view of the decoupled architecture, client/server boundaries, databases, and core engines.
+
+![System Architecture Overview](docs/screenshots/architecture_diagram.png)
+
+### Research-Level Technical Blueprint
+An academic-level blueprint highlighting multi-modal telemetry ingestion, hybrid diagnostic scoring, and the agentic RAG reasoning pipeline.
+
+![Research-Level Technical Blueprint](docs/screenshots/research_architecture.png)
 
 ### Operations Dashboard
 The main dashboard provides a comprehensive plant overview with real-time equipment health monitoring, sensor trend visualization, alert management, and AI-powered status indicators.
