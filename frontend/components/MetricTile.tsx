@@ -79,16 +79,31 @@ export function MetricTile({ metric }: { metric: HealthMetric }) {
         <p className="mt-1 text-xs font-bold uppercase tracking-wide text-slate-500">{metric.status}</p>
       </div>
 
-      <dl className="mt-3 grid grid-cols-2 gap-3 border-t border-white/[0.06] pt-3 text-xs">
-        <div className="card-muted min-w-0 px-2 py-2">
-          <dt className="font-bold uppercase tracking-wide text-slate-500">Limit</dt>
-          <dd className="mt-1 break-words font-semibold leading-5 text-slate-300">{metric.threshold}</dd>
+      <div className="mt-3.5 space-y-2.5 rounded-lg bg-white/[0.02] border border-white/[0.04] p-3 text-xs">
+        <div className="flex items-center justify-between">
+          <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">Threshold Limit</span>
+          <span className="font-mono text-slate-300 font-bold bg-white/[0.04] px-1.5 py-0.5 rounded border border-white/[0.06] text-[10px]">
+            {metric.threshold}
+          </span>
         </div>
-        <div className="card-muted min-w-0 px-2 py-2">
-          <dt className="font-bold uppercase tracking-wide text-slate-500">Remark</dt>
-          <dd className="mt-1 break-words font-semibold leading-5 text-slate-300">{remarks[metric.status]}</dd>
+        <div className="flex items-center justify-between border-t border-white/[0.04] pt-2.5">
+          <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500">Status Remark</span>
+          <span className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-semibold ${
+            metric.status === "critical" ? "bg-red-500/10 text-red-400 border border-red-500/20 animate-pulse" :
+            metric.status === "high" ? "bg-orange-500/10 text-orange-400 border border-orange-500/20" :
+            metric.status === "medium" ? "bg-amber-500/10 text-amber-400 border border-amber-500/20" :
+            "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"
+          }`}>
+            <span className={`w-1.5 h-1.5 rounded-full ${
+              metric.status === "critical" ? "bg-red-400 animate-pulse" :
+              metric.status === "high" ? "bg-orange-400" :
+              metric.status === "medium" ? "bg-amber-400" :
+              "bg-emerald-400"
+            }`} />
+            {remarks[metric.status]}
+          </span>
         </div>
-      </dl>
+      </div>
 
       <div className="mt-auto pt-4">
         <div className="h-1.5 overflow-hidden rounded-full bg-white/[0.1]">
