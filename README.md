@@ -1,4 +1,4 @@
-<![CDATA[<div align="center">
+<div align="center">
 
 # 🛡️ SteelGuard AI
 
@@ -1186,4 +1186,3 @@ This project is licensed under the MIT License. See [LICENSE](LICENSE) for detai
 [⬆ Back to Top](#️-steelguard-ai)
 
 </div>
-]]>
