@@ -31,5 +31,16 @@
     "note": "Recommendation accepted from the maintenance review panel.",
     "id": "fb-b56c98add0",
     "timestamp": "2026-06-09T11:46:31.211625Z"
+  },
+  {
+    "recommendation_id": "rec-438ddf992d",
+    "equipment_id": "rm-motor-01",
+    "rating": "accepted",
+    "actual_root_cause": "Bearing grease line blockage",
+    "action_taken": "Cleared grease line and realigned coupling",
+    "downtime_saved_minutes": 35,
+    "note": null,
+    "id": "fb-d1766312ee",
+    "timestamp": "2026-06-12T16:41:39.545242Z"
   }
 ]

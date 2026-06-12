@@ -136,10 +136,10 @@ function riskBarColor(risk: RiskLevel) {
 }
 
 function riskTextColor(risk: RiskLevel) {
-  if (risk === "critical") return "text-red-600";
-  if (risk === "high") return "text-orange-600";
-  if (risk === "medium") return "text-amber-600";
-  return "text-emerald-600";
+  if (risk === "critical") return "text-red-400";
+  if (risk === "high") return "text-orange-400";
+  if (risk === "medium") return "text-amber-400";
+  return "text-emerald-400";
 }
 
 export default function Home() {
@@ -489,20 +489,22 @@ export default function Home() {
   }
 
   return (
-    <main className="min-h-screen bg-transparent text-steel-900">
+    <main className="relative min-h-screen text-slate-100">
       <div className="flex min-h-screen">
-        <aside className="hidden w-[264px] shrink-0 flex-col border-r border-white/10 bg-[linear-gradient(180deg,#061723_0%,#0a2230_50%,#0f2a35_100%)] text-white shadow-command lg:flex">
-          <div className="flex h-20 items-center gap-3 border-b border-white/10 px-5">
-            <span className="flex h-11 w-11 items-center justify-center rounded-lg border border-coolant-200/30 bg-coolant-500/15 text-coolant-100 shadow-insetline">
+        {/* ── Sidebar ── */}
+        <aside className="hidden w-[264px] shrink-0 flex-col border-r border-white/[0.06] bg-sidebar text-white shadow-command lg:flex">
+          <div className="flex h-20 items-center gap-3 border-b border-white/[0.06] px-5">
+            <span className="relative flex h-11 w-11 items-center justify-center rounded-lg bg-gradient-to-br from-violet-500 via-purple-600 to-indigo-600 text-white shadow-lg shadow-violet-500/30">
               <Factory size={22} />
+              <span className="absolute inset-0 rounded-lg bg-violet-400/20 animate-glow-pulse" />
             </span>
             <div className="min-w-0">
               <p className="truncate text-base font-bold tracking-normal">SteelGuard AI</p>
-              <p className="text-xs font-semibold text-slate-300">Maintenance Ops</p>
+              <p className="text-xs font-semibold text-slate-400">Maintenance Ops</p>
             </div>
           </div>
 
-          <nav className="flex-1 space-y-1.5 px-3 py-4">
+          <nav className="flex-1 space-y-1 px-3 py-4">
             {navigationItems.map((item) => (
               <SidebarLink
                 key={item.label}
@@ -514,20 +516,20 @@ export default function Home() {
           </nav>
 
           <div className="p-4">
-            <section className="rounded-lg border border-white/10 bg-white/[0.075] p-4 shadow-insetline">
+            <section className="rounded-lg border border-white/[0.08] bg-white/[0.04] p-4 backdrop-blur-sm">
               <div className="flex items-center justify-between gap-3">
-                <p className="text-xs font-bold uppercase tracking-wide text-slate-300">Backend</p>
-                <ConnectionPill status={apiStatus} compact dark />
+                <p className="text-xs font-bold uppercase tracking-wide text-slate-400">Backend</p>
+                <ConnectionPill status={apiStatus} compact />
               </div>
               <div className="mt-4 space-y-3 text-xs">
-                <MiniDataRow label="Stream step" value={String(currentStep)} dark />
-                <MiniDataRow label="Rows" value={formatNumber(dataset?.rows_loaded ?? summary.dataset_rows_loaded)} dark />
-                <MiniDataRow label="Mapped assets" value={String(dataset?.equipment_mappings ?? equipment.length)} dark />
+                <MiniDataRow label="Stream step" value={String(currentStep)} />
+                <MiniDataRow label="Rows" value={formatNumber(dataset?.rows_loaded ?? summary.dataset_rows_loaded)} />
+                <MiniDataRow label="Mapped assets" value={String(dataset?.equipment_mappings ?? equipment.length)} />
               </div>
               <button
                 type="button"
                 onClick={() => void advanceStream()}
-                className="focus-ring mt-4 inline-flex h-9 w-full items-center justify-center gap-2 rounded-md bg-coolant-500 text-xs font-bold text-white shadow-sm transition hover:bg-coolant-600 disabled:opacity-60"
+                className="focus-ring mt-4 inline-flex h-9 w-full items-center justify-center gap-2 rounded-md bg-gradient-to-r from-violet-600 via-purple-500 to-indigo-500 text-xs font-bold text-white shadow-sm transition hover:shadow-glow-purple disabled:opacity-50"
                 disabled={busy || apiStatus === "offline"}
               >
                 <Zap size={14} />
@@ -537,25 +539,26 @@ export default function Home() {
           </div>
         </aside>
 
+        {/* ── Mobile Nav Overlay ── */}
         {mobileNavOpen && (
           <div className="fixed inset-0 z-40 lg:hidden">
             <button
               type="button"
               aria-label="Close navigation"
-              className="absolute inset-0 bg-steel-950/45"
+              className="absolute inset-0 bg-black/60 backdrop-blur-sm"
               onClick={() => setMobileNavOpen(false)}
             />
-            <aside className="relative flex h-full w-[280px] flex-col bg-[linear-gradient(180deg,#061723_0%,#0a2230_50%,#0f2a35_100%)] text-white shadow-command">
-              <div className="flex h-20 items-center gap-3 border-b border-white/10 px-5">
-                <span className="flex h-11 w-11 items-center justify-center rounded-lg border border-coolant-200/30 bg-coolant-500/15 text-coolant-100 shadow-insetline">
+            <aside className="relative flex h-full w-[280px] flex-col bg-sidebar text-white shadow-command">
+              <div className="flex h-20 items-center gap-3 border-b border-white/[0.06] px-5">
+                <span className="flex h-11 w-11 items-center justify-center rounded-lg bg-gradient-to-br from-violet-500 via-purple-600 to-indigo-600 text-white shadow-lg shadow-violet-500/30">
                   <Factory size={22} />
                 </span>
                 <div className="min-w-0">
                   <p className="truncate text-base font-bold tracking-normal">SteelGuard AI</p>
-                  <p className="text-xs font-semibold text-slate-300">Maintenance Ops</p>
+                  <p className="text-xs font-semibold text-slate-400">Maintenance Ops</p>
                 </div>
               </div>
-              <nav className="flex-1 space-y-1.5 px-3 py-4">
+              <nav className="flex-1 space-y-1 px-3 py-4">
                 {navigationItems.map((item) => (
                   <SidebarLink
                     key={item.label}
@@ -569,8 +572,10 @@ export default function Home() {
           </div>
         )}
 
+        {/* ── Main Content ── */}
         <section className="flex min-w-0 flex-1 flex-col">
-          <header className="sticky top-0 z-20 flex min-h-[76px] flex-col gap-3 border-b border-steel-200/80 bg-white/90 px-4 py-3 shadow-[0_10px_30px_rgba(14,23,27,0.06)] backdrop-blur-xl sm:px-5 xl:flex-row xl:items-center xl:justify-between">
+          {/* Header */}
+          <header className="sticky top-0 z-20 flex min-h-[76px] flex-col gap-3 border-b border-white/[0.06] bg-[hsl(222,25%,7%)]/80 px-4 py-3 shadow-[0_10px_40px_rgba(0,0,0,0.3)] backdrop-blur-2xl sm:px-5 xl:flex-row xl:items-center xl:justify-between">
             <div className="flex items-center gap-3">
               <button
                 type="button"
@@ -582,10 +587,10 @@ export default function Home() {
               </button>
               <div>
                 <div className="flex flex-wrap items-center gap-2">
-                  <h1 className="text-xl font-bold tracking-normal text-steel-950">SteelGuard Command Center</h1>
+                  <h1 className="text-xl font-bold tracking-normal text-white">SteelGuard Command Center</h1>
                   <ConnectionPill status={apiStatus} compact />
                 </div>
-                <p className="mt-1 text-xs font-medium text-steel-500 sm:text-sm">
+                <p className="mt-1 text-xs font-medium text-slate-500 sm:text-sm">
                   Live plant health, recommendations, evidence, and reporting in one workspace.
                 </p>
               </div>
@@ -602,8 +607,8 @@ export default function Home() {
                   type="button"
                   title={live ? "Pause live stream" : "Resume live stream"}
                   onClick={() => setLive((value) => !value)}
-                  className={`focus-ring inline-flex h-10 w-10 items-center justify-center rounded-md border shadow-sm transition ${
-                    live ? "border-coolant-200 bg-coolant-50 text-coolant-700 hover:bg-coolant-100" : "border-steel-200 bg-white text-steel-700 hover:border-coolant-200 hover:text-coolant-800"
+                  className={`focus-ring inline-flex h-10 w-10 items-center justify-center rounded-md border transition-all duration-300 ${
+                    live ? "border-violet-500/30 bg-violet-500/10 text-violet-400 shadow-glow-purple hover:bg-violet-500/15" : "border-white/[0.08] bg-white/[0.04] text-slate-400 hover:border-violet-500/20 hover:text-violet-400"
                   }`}
                 >
                   {live ? <Pause size={17} /> : <Play size={17} />}
@@ -623,12 +628,12 @@ export default function Home() {
                   className="control-button relative h-10 w-10"
                 >
                   <Bell size={17} />
-                  <span className="absolute -right-1 -top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-red-500 px-1 text-[10px] font-bold text-white">
+                  <span className="absolute -right-1 -top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-red-500 px-1 text-[10px] font-bold text-white shadow-neon-red">
                     {notifications.length}
                   </span>
                 </button>
-                <div className="hidden items-center gap-3 border-l border-steel-200 pl-3 sm:flex">
-                  <span className="icon-tile h-10 w-10 bg-steel-50">
+                <div className="hidden items-center gap-3 border-l border-white/[0.08] pl-3 sm:flex">
+                  <span className="icon-tile h-10 w-10">
                     <UserCircle size={22} />
                   </span>
                   <div>
@@ -644,7 +649,7 @@ export default function Home() {
                         </option>
                       ))}
                     </select>
-                    <p className="mt-1 text-xs font-medium text-steel-500">
+                    <p className="mt-1 text-xs font-medium text-slate-500">
                       {notifications.length} live notifications
                     </p>
                   </div>
@@ -653,60 +658,63 @@ export default function Home() {
             </div>
           </header>
 
-          <div className="space-y-6 p-4 sm:p-5 xl:p-6">
-            <section id="dashboard" className="scroll-mt-24 overflow-hidden rounded-lg border border-steel-200/90 bg-white shadow-command shadow-insetline">
+          {/* ── Dashboard Content ── */}
+          <div className="relative space-y-6 p-4 sm:p-5 xl:p-6">
+            {/* Hero Section */}
+            <section id="dashboard" className="scroll-mt-24 overflow-hidden rounded-xl border border-white/[0.08] bg-white/[0.03] shadow-command backdrop-blur-xl">
               <div className="grid xl:grid-cols-[minmax(0,1fr)_340px]">
                 <div className="relative overflow-hidden p-5 sm:p-6">
-                  <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-coolant via-blue-500 to-forge" />
+                  <div className="absolute inset-x-0 top-0 h-[3px] bg-gradient-to-r from-cyan-400 via-violet-500 via-50% via-fuchsia-500 to-amber-400 animate-aurora bg-[length:300%_auto]" />
                   <div className="flex flex-wrap items-center gap-2">
                     <span className="kicker">Selected asset</span>
                     <RiskBadge risk={selectedRisk} />
                     {live && (
-                      <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-200 bg-emerald-50 px-2.5 py-1 text-[11px] font-bold uppercase tracking-wide text-emerald-700">
-                        <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-500" />
+                      <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-2.5 py-1 text-[11px] font-bold uppercase tracking-wide text-emerald-400">
+                        <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.6)]" />
                         Live
                       </span>
                     )}
                   </div>
-                  <h2 className="mt-3 text-3xl font-bold tracking-normal text-steel-950">{selectedEquipmentName}</h2>
-                  <p className="mt-2 max-w-3xl text-sm leading-6 text-steel-600">
+                  <h2 className="mt-3 text-3xl font-bold tracking-normal text-white">{selectedEquipmentName}</h2>
+                  <p className="mt-2 max-w-3xl text-sm leading-6 text-slate-400">
                     {selectedEquipment?.description ?? "Backend data will appear here once an equipment asset is selected."}
                   </p>
                   <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-5">
                     <SignalTile icon={<Gauge size={17} />} label="Priority" value={`${selectedPriority || 0}/100`} tone={riskTextColor(selectedRisk)} />
-                    <SignalTile icon={<Activity size={17} />} label="RUL" value={`${selectedRul || 0}h`} tone="text-coolant-700" />
-                    <SignalTile icon={<TrendingUp size={17} />} label="Anomaly" value={`${selectedAnomaly}%`} tone={selectedAnomaly > 50 ? "text-red-600" : "text-steel-900"} />
-                    <SignalTile icon={<Brain size={17} />} label="ML Failure" value={`${selectedMlProbability}%`} tone={selectedMlProbability > 50 ? "text-red-600" : "text-coolant-700"} />
-                    <SignalTile icon={<CalendarDays size={17} />} label="Latest sample" value={compactTime(selectedHealth?.latest_reading.timestamp)} tone="text-steel-900" />
+                    <SignalTile icon={<Activity size={17} />} label="RUL" value={`${selectedRul || 0}h`} tone="text-coolant-400" />
+                    <SignalTile icon={<TrendingUp size={17} />} label="Anomaly" value={`${selectedAnomaly}%`} tone={selectedAnomaly > 50 ? "text-red-400" : "text-white"} />
+                    <SignalTile icon={<Brain size={17} />} label="ML Failure" value={`${selectedMlProbability}%`} tone={selectedMlProbability > 50 ? "text-red-400" : "text-coolant-400"} />
+                    <SignalTile icon={<CalendarDays size={17} />} label="Latest sample" value={compactTime(selectedHealth?.latest_reading.timestamp)} tone="text-white" />
                   </div>
                   <FleetRiskStrip overview={healthOverview} />
                 </div>
 
-                <div id="settings" className="scroll-mt-24 border-t border-steel-200 bg-[linear-gradient(180deg,#0b1820_0%,#102a35_100%)] p-5 text-white xl:border-l xl:border-t-0">
+                {/* Data Source Panel */}
+                <div id="settings" className="scroll-mt-24 border-t border-white/[0.06] bg-sidebar-solid p-5 text-white xl:border-l xl:border-t-0">
                   <div className="flex items-center justify-between gap-3">
                     <div>
-                      <p className="text-xs font-bold uppercase tracking-wide text-slate-300">Data source</p>
+                      <p className="text-xs font-bold uppercase tracking-wide text-slate-400">Data source</p>
                       <h3 className="mt-1 text-base font-bold">AI4I live stream</h3>
                     </div>
-                    <span className="flex h-10 w-10 items-center justify-center rounded-md border border-coolant-200/20 bg-coolant-500/15 text-coolant-100 shadow-insetline">
+                    <span className="flex h-10 w-10 items-center justify-center rounded-md border border-coolant-500/20 bg-coolant-500/10 text-coolant-400">
                       <Database size={20} />
                     </span>
                   </div>
                   <div className="mt-5 space-y-3 text-sm">
-                    <MiniDataRow label="Rows loaded" value={formatNumber(dataset?.rows_loaded ?? summary.dataset_rows_loaded)} dark />
-                    <MiniDataRow label="Failure rows" value={formatNumber(dataset?.failure_rows_loaded ?? 0)} dark />
-                    <MiniDataRow label="Open alerts" value={String(summary.open_alert_count || alerts.length)} dark />
-                    <MiniDataRow label="Avg RUL" value={`${summary.average_rul_hours || 0}h`} dark />
-                    <MiniDataRow label="OpenAI copilot" value={openaiEnabled ? "Enabled" : "Fallback"} dark />
-                    <MiniDataRow label="RAG vectors" value={ragProvider} dark />
-                    <MiniDataRow label="ML model" value={mlModelLabel} dark />
-                    <MiniDataRow label="ML accuracy" value={formatPercent(mlValidationMetrics?.accuracy, { digits: 0, floor: true })} dark />
-                    <MiniDataRow label="Precision" value={formatPercent(mlValidationMetrics?.precision)} dark />
-                    <MiniDataRow label="Recall" value={formatPercent(mlValidationMetrics?.recall)} dark />
-                    <MiniDataRow label="F1" value={formatPercent(mlValidationMetrics?.f1)} dark />
+                    <MiniDataRow label="Rows loaded" value={formatNumber(dataset?.rows_loaded ?? summary.dataset_rows_loaded)} />
+                    <MiniDataRow label="Failure rows" value={formatNumber(dataset?.failure_rows_loaded ?? 0)} />
+                    <MiniDataRow label="Open alerts" value={String(summary.open_alert_count || alerts.length)} />
+                    <MiniDataRow label="Avg RUL" value={`${summary.average_rul_hours || 0}h`} />
+                    <MiniDataRow label="OpenAI copilot" value={openaiEnabled ? "Enabled" : "Fallback"} />
+                    <MiniDataRow label="RAG vectors" value={ragProvider} />
+                    <MiniDataRow label="ML model" value={mlModelLabel} />
+                    <MiniDataRow label="ML accuracy" value={formatPercent(mlValidationMetrics?.accuracy, { digits: 0, floor: true })} />
+                    <MiniDataRow label="Precision" value={formatPercent(mlValidationMetrics?.precision)} />
+                    <MiniDataRow label="Recall" value={formatPercent(mlValidationMetrics?.recall)} />
+                    <MiniDataRow label="F1" value={formatPercent(mlValidationMetrics?.f1)} />
                   </div>
-                  <div className="mt-5 rounded-md border border-white/10 bg-white/[0.07] p-3 shadow-insetline">
-                    <p className="text-xs font-semibold leading-5 text-slate-300">
+                  <div className="mt-5 rounded-md border border-white/[0.08] bg-white/[0.04] p-3">
+                    <p className="text-xs font-semibold leading-5 text-slate-400">
                       Step {currentStep} is mapped into steel equipment metrics, then scored by the backend before the AI recommendation is generated.
                     </p>
                   </div>
@@ -714,6 +722,7 @@ export default function Home() {
               </div>
             </section>
 
+            {/* KPI Cards */}
             <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-5">
               <KpiCard
                 title="Assets Online"
@@ -754,6 +763,7 @@ export default function Home() {
               />
             </section>
 
+            {/* Decision Flow */}
             <DecisionFlow
               dataset={dataset}
               selectedHealth={selectedHealth}
@@ -887,8 +897,8 @@ export default function Home() {
 
                 {(error || notice) && (
                   <div
-                    className={`rounded-lg border p-3 text-sm shadow-sm ${
-                      error ? "border-red-200 bg-red-50 text-red-700" : "border-emerald-200 bg-emerald-50 text-emerald-700"
+                    className={`rounded-lg border p-3 text-sm ${
+                      error ? "border-red-500/30 bg-red-500/10 text-red-400" : "border-emerald-500/30 bg-emerald-500/10 text-emerald-400"
                     }`}
                   >
                     {error ?? notice}
@@ -902,6 +912,10 @@ export default function Home() {
     </main>
   );
 }
+
+/* ══════════════════════════════════════════════════════════════
+   Inline Sub-Components — Dark Glassmorphic Theme
+   ══════════════════════════════════════════════════════════════ */
 
 function SidebarLink({
   icon: Icon,
@@ -923,13 +937,13 @@ function SidebarLink({
       type="button"
       title={`Go to ${label}`}
       onClick={() => onNavigate(target)}
-      className={`focus-ring relative flex h-10 w-full items-center justify-between rounded-md border px-3 text-left text-sm font-semibold transition ${
-        active ? "border-white/10 bg-white/[0.13] text-white shadow-insetline" : "border-transparent text-slate-300 hover:border-white/10 hover:bg-white/[0.08] hover:text-white"
+      className={`focus-ring relative flex h-10 w-full items-center justify-between rounded-md border px-3 text-left text-sm font-semibold transition-all duration-300 ${
+        active ? "border-white/[0.1] bg-white/[0.08] text-white shadow-insetline" : "border-transparent text-slate-400 hover:border-white/[0.06] hover:bg-white/[0.04] hover:text-white"
       }`}
     >
-      {active && <span className="absolute inset-y-2 left-0 w-1 rounded-r-full bg-coolant-300" />}
+      {active && <span className="absolute inset-y-2 left-0 w-1 rounded-r-full bg-violet-400 shadow-[0_0_8px_rgba(167,139,250,0.5)]" />}
       <span className="flex min-w-0 items-center gap-3">
-        <Icon size={17} className={active ? "text-coolant-200" : undefined} />
+        <Icon size={17} className={active ? "text-violet-400" : undefined} />
         <span className="truncate">{label}</span>
       </span>
       {badge && <span className="rounded-full bg-red-500 px-2 py-0.5 text-[10px] font-bold text-white">{badge}</span>}
@@ -937,47 +951,41 @@ function SidebarLink({
   );
 }
 
-function ConnectionPill({ status, compact, dark }: { status: ApiStatus; compact?: boolean; dark?: boolean }) {
+function ConnectionPill({ status, compact }: { status: ApiStatus; compact?: boolean }) {
   const label = status === "online" ? "Online" : status === "offline" ? "Offline" : "Checking";
   const color =
     status === "online"
-      ? dark
-        ? "border-emerald-300/25 bg-emerald-400/10 text-emerald-200"
-        : "border-emerald-200 bg-emerald-50 text-emerald-700"
+      ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-400"
       : status === "offline"
-        ? dark
-          ? "border-red-300/25 bg-red-400/10 text-red-200"
-          : "border-red-200 bg-red-50 text-red-700"
-        : dark
-          ? "border-amber-300/25 bg-amber-400/10 text-amber-200"
-          : "border-amber-200 bg-amber-50 text-amber-700";
+        ? "border-red-500/30 bg-red-500/10 text-red-400"
+        : "border-amber-500/30 bg-amber-500/10 text-amber-400";
 
   return (
     <span className={`inline-flex items-center gap-1.5 rounded-full border font-bold uppercase tracking-wide ${compact ? "px-2 py-0.5 text-[10px]" : "px-2.5 py-1 text-[11px]"} ${color}`}>
-      <span className={`h-1.5 w-1.5 rounded-full ${status === "online" ? "bg-emerald-500" : status === "offline" ? "bg-red-500" : "bg-amber-500"}`} />
+      <span className={`h-1.5 w-1.5 rounded-full ${status === "online" ? "bg-emerald-400 shadow-[0_0_6px_rgba(52,211,153,0.6)]" : status === "offline" ? "bg-red-400 shadow-[0_0_6px_rgba(248,113,113,0.6)]" : "bg-amber-400 shadow-[0_0_6px_rgba(251,191,36,0.6)]"} animate-pulse`} />
       {label}
     </span>
   );
 }
 
-function MiniDataRow({ label, value, dark }: { label: string; value: string; dark?: boolean }) {
+function MiniDataRow({ label, value }: { label: string; value: string }) {
   return (
-    <div className={`flex items-center justify-between gap-3 ${dark ? "text-slate-300" : "text-steel-600"}`}>
+    <div className="flex items-center justify-between gap-3 text-slate-400">
       <span className="truncate text-xs font-semibold">{label}</span>
-      <span className={`truncate text-right text-xs font-bold ${dark ? "text-white" : "text-steel-900"}`}>{value}</span>
+      <span className="truncate text-right text-xs font-bold text-slate-200">{value}</span>
     </div>
   );
 }
 
 function HeaderMetric({ label, value, tone }: { label: string; value: string; tone: "coolant" | "red" | "amber" }) {
   const toneStyles = {
-    coolant: "border-coolant-100 bg-coolant-50 text-coolant-800",
-    red: "border-red-100 bg-red-50 text-red-700",
-    amber: "border-amber-100 bg-amber-50 text-amber-700"
+    coolant: "border-coolant-500/25 bg-coolant-500/10 text-coolant-400",
+    red: "border-red-500/25 bg-red-500/10 text-red-400",
+    amber: "border-amber-500/25 bg-amber-500/10 text-amber-400"
   };
 
   return (
-    <div className={`min-w-[88px] rounded-md border px-3 py-2 shadow-sm shadow-insetline ${toneStyles[tone]}`}>
+    <div className={`min-w-[88px] rounded-md border px-3 py-2 ${toneStyles[tone]}`}>
       <p className="text-[10px] font-bold uppercase tracking-wide opacity-75">{label}</p>
       <p className="mt-0.5 text-sm font-bold tabular-nums">{value}</p>
     </div>
@@ -986,9 +994,9 @@ function HeaderMetric({ label, value, tone }: { label: string; value: string; to
 
 function SignalTile({ icon, label, value, tone }: { icon: ReactNode; label: string; value: string; tone: string }) {
   return (
-    <div className="rounded-md border border-steel-200/80 bg-steel-50/80 p-3 shadow-insetline">
-      <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wide text-steel-500">
-        <span className="text-steel-400">{icon}</span>
+    <div className="rounded-md border border-white/[0.08] bg-white/[0.04] p-3 backdrop-blur-sm transition-all duration-300 hover:border-white/[0.12] hover:bg-white/[0.06]">
+      <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wide text-slate-500">
+        <span className="text-slate-500">{icon}</span>
         {label}
       </div>
       <p className={`mt-2 truncate text-xl font-bold tracking-normal ${tone}`}>{value}</p>
@@ -1002,24 +1010,24 @@ function FleetRiskStrip({ overview }: { overview: { healthy: number; warning: nu
     { label: "Healthy", value: overview.healthy, className: "bg-emerald-500" },
     { label: "Warning", value: overview.warning, className: "bg-amber-500" },
     { label: "Critical", value: overview.critical, className: "bg-red-500" },
-    { label: "Unknown", value: overview.unknown, className: "bg-steel-300" }
+    { label: "Unknown", value: overview.unknown, className: "bg-slate-600" }
   ];
 
   return (
     <div className="mt-5">
-      <div className="flex h-2 overflow-hidden rounded-full bg-steel-100">
+      <div className="flex h-2 overflow-hidden rounded-full bg-white/[0.1]">
         {segments.map((segment) => (
           <span
             key={segment.label}
-            className={segment.className}
+            className={`${segment.className} transition-all duration-500`}
             style={{ width: `${Math.max(segment.value ? 8 : 0, (segment.value / total) * 100)}%` }}
           />
         ))}
       </div>
-      <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-xs font-semibold text-steel-500">
+      <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-xs font-semibold text-slate-500">
         {segments.map((segment) => (
           <span key={segment.label}>
-            {segment.label}: <span className="text-steel-800">{segment.value}</span>
+            {segment.label}: <span className="text-slate-300">{segment.value}</span>
           </span>
         ))}
       </div>
@@ -1044,24 +1052,24 @@ function KpiCard({
 }) {
   const toneStyles = {
     coolant: {
-      bar: "bg-coolant",
-      icon: "border-coolant-100 bg-coolant-50 text-coolant-700"
+      bar: "bg-gradient-to-r from-cyan-400 to-teal-400",
+      icon: "border-cyan-400/25 bg-cyan-500/10 text-cyan-400"
     },
     red: {
-      bar: "bg-red-500",
-      icon: "border-red-100 bg-red-50 text-red-600"
+      bar: "bg-gradient-to-r from-rose-500 to-pink-500",
+      icon: "border-rose-400/25 bg-rose-500/10 text-rose-400"
     },
     amber: {
-      bar: "bg-amber-500",
-      icon: "border-amber-100 bg-amber-50 text-amber-600"
+      bar: "bg-gradient-to-r from-amber-400 to-orange-400",
+      icon: "border-amber-400/25 bg-amber-500/10 text-amber-400"
     },
     blue: {
-      bar: "bg-blue-500",
-      icon: "border-blue-100 bg-blue-50 text-blue-600"
+      bar: "bg-gradient-to-r from-sky-400 to-blue-500",
+      icon: "border-sky-400/25 bg-sky-500/10 text-sky-400"
     },
     violet: {
-      bar: "bg-violet-500",
-      icon: "border-violet-100 bg-violet-50 text-violet-600"
+      bar: "bg-gradient-to-r from-violet-500 to-purple-500",
+      icon: "border-violet-400/25 bg-violet-500/10 text-violet-400"
     }
   };
 
@@ -1070,15 +1078,15 @@ function KpiCard({
       <span className={`absolute inset-x-0 top-0 h-1 ${toneStyles[tone].bar}`} />
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
-          <p className="text-xs font-bold uppercase tracking-wide text-steel-500">{title}</p>
-          <p className="mt-2 truncate text-2xl font-bold tracking-normal text-steel-950">
+          <p className="text-xs font-bold uppercase tracking-wide text-slate-500">{title}</p>
+          <p className="mt-2 truncate text-2xl font-bold tracking-normal text-white">
             {value}
-            {suffix && <span className="ml-1 text-sm font-semibold text-steel-500">{suffix}</span>}
+            {suffix && <span className="ml-1 text-sm font-semibold text-slate-500">{suffix}</span>}
           </p>
         </div>
-        <span className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-md border shadow-sm shadow-insetline ${toneStyles[tone].icon}`}>{icon}</span>
+        <span className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-md border ${toneStyles[tone].icon}`}>{icon}</span>
       </div>
-      <p className="mt-3 line-clamp-2 text-xs font-semibold leading-5 text-steel-600">{detail}</p>
+      <p className="mt-3 line-clamp-2 text-xs font-semibold leading-5 text-slate-500">{detail}</p>
     </section>
   );
 }
@@ -1143,13 +1151,13 @@ function FlowStep({
 }) {
   return (
     <article className="panel flex min-h-[108px] items-start gap-3 p-4">
-      <span className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-md border shadow-sm shadow-insetline ${state === "complete" ? "border-coolant-100 bg-coolant-50 text-coolant-700" : "border-steel-200 bg-steel-50 text-steel-500"}`}>
+      <span className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-md border ${state === "complete" ? "border-violet-400/25 bg-violet-500/10 text-violet-400" : "border-white/[0.08] bg-white/[0.04] text-slate-500"}`}>
         {icon}
       </span>
       <div className="min-w-0">
-        <p className="text-xs font-bold uppercase tracking-wide text-steel-500">{title}</p>
-        <p className="mt-1 truncate text-sm font-bold text-steel-950">{value}</p>
-        <p className="mt-1 line-clamp-2 text-xs leading-5 text-steel-600">{detail}</p>
+        <p className="text-xs font-bold uppercase tracking-wide text-slate-500">{title}</p>
+        <p className="mt-1 truncate text-sm font-bold text-white">{value}</p>
+        <p className="mt-1 line-clamp-2 text-xs leading-5 text-slate-500">{detail}</p>
       </div>
     </article>
   );
@@ -1160,18 +1168,18 @@ function SectionHeading({ kicker, title, detail }: { kicker: string; title: stri
     <div className="flex flex-wrap items-end justify-between gap-2">
       <div>
         <p className="kicker">{kicker}</p>
-        <h2 className="mt-1 text-base font-bold text-steel-950">{title}</h2>
+        <h2 className="mt-1 text-base font-bold text-white">{title}</h2>
       </div>
-      {detail && <p className="text-xs font-semibold text-steel-500">{detail}</p>}
+      {detail && <p className="text-xs font-semibold text-slate-500">{detail}</p>}
     </div>
   );
 }
 
 function LoadingPanel({ label }: { label: string }) {
   return (
-    <section className="panel flex h-72 items-center justify-center p-4 text-sm font-semibold text-steel-500">
+    <section className="panel flex h-72 items-center justify-center p-4 text-sm font-semibold text-slate-500">
       <span className="inline-flex items-center gap-2">
-        <Loader2 size={17} className="animate-spin" />
+        <Loader2 size={17} className="animate-spin text-coolant-500" />
         Loading {label}
       </span>
     </section>
@@ -1180,10 +1188,10 @@ function LoadingPanel({ label }: { label: string }) {
 
 function MetricSkeleton() {
   return (
-    <div className="panel min-h-[112px] animate-pulse p-4">
-      <div className="h-3 w-24 rounded bg-steel-100" />
-      <div className="mt-4 h-6 w-20 rounded bg-steel-100" />
-      <div className="mt-5 h-2 rounded bg-steel-100" />
+    <div className="panel min-h-[112px] p-4">
+      <div className="h-3 w-24 rounded bg-white/[0.06] animate-shimmer" />
+      <div className="mt-4 h-6 w-20 rounded bg-white/[0.06] animate-shimmer" />
+      <div className="mt-5 h-2 rounded bg-white/[0.06] animate-shimmer" />
     </div>
   );
 }
@@ -1192,8 +1200,8 @@ function MlPredictionCard({ prediction }: { prediction?: MlPrediction | null }) 
   if (!prediction) {
     return (
       <section className="panel p-4">
-        <div className="flex items-center gap-3 text-sm font-semibold text-steel-500">
-          <Loader2 size={17} className="animate-spin" />
+        <div className="flex items-center gap-3 text-sm font-semibold text-slate-500">
+          <Loader2 size={17} className="animate-spin text-coolant-500" />
           Training or loading ML classifier
         </div>
       </section>
@@ -1202,7 +1210,7 @@ function MlPredictionCard({ prediction }: { prediction?: MlPrediction | null }) 
 
   const probability = Math.round(prediction.failure_probability * 100);
   const mode = prediction.predicted_failure_mode.replaceAll("_", " ");
-  const likelyTone = prediction.failure_likely ? "text-red-600" : "text-coolant-700";
+  const likelyTone = prediction.failure_likely ? "text-red-400" : "text-coolant-400";
   const barColor = prediction.failure_likely ? "bg-red-500" : "bg-coolant";
 
   return (
@@ -1210,22 +1218,22 @@ function MlPredictionCard({ prediction }: { prediction?: MlPrediction | null }) 
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
           <p className="kicker">ML prediction</p>
-          <h2 className="mt-1 flex items-center gap-2 text-base font-bold text-steel-950">
-            <Brain size={18} className="text-blue-600" />
+          <h2 className="mt-1 flex items-center gap-2 text-base font-bold text-white">
+            <Brain size={18} className="text-coolant-400" />
             Failure classifier
           </h2>
-          <p className="mt-1 text-xs font-semibold text-steel-500">
+          <p className="mt-1 text-xs font-semibold text-slate-500">
             {prediction.model_name} - threshold {Math.round(prediction.threshold * 100)}%
           </p>
         </div>
-        <div className="rounded-md border border-steel-200/80 bg-steel-50/80 px-3 py-2 text-right shadow-insetline">
+        <div className="rounded-md border border-white/[0.08] bg-white/[0.04] px-3 py-2 text-right">
           <p className={`text-2xl font-bold tabular-nums ${likelyTone}`}>{probability}%</p>
-          <p className="text-xs font-bold uppercase tracking-wide text-steel-500">failure probability</p>
+          <p className="text-xs font-bold uppercase tracking-wide text-slate-500">failure probability</p>
         </div>
       </div>
 
-      <div className="mt-4 h-2 overflow-hidden rounded-full bg-steel-100">
-        <div className={`h-full rounded-full ${barColor}`} style={{ width: `${Math.max(6, probability)}%` }} />
+      <div className="mt-4 h-2 overflow-hidden rounded-full bg-white/[0.1]">
+        <div className={`h-full rounded-full ${barColor} transition-all duration-500`} style={{ width: `${Math.max(6, probability)}%` }} />
       </div>
 
       <div className="mt-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
@@ -1237,7 +1245,7 @@ function MlPredictionCard({ prediction }: { prediction?: MlPrediction | null }) 
 
       <div className="mt-4 flex flex-wrap gap-2">
         {prediction.top_signals.map((signal) => (
-          <span key={signal} className="rounded-md border border-blue-100 bg-blue-50 px-2.5 py-1 text-xs font-bold capitalize text-blue-700">
+          <span key={signal} className="rounded-md border border-sky-500/25 bg-sky-500/10 px-2.5 py-1 text-xs font-bold capitalize text-sky-400">
             {signal.replaceAll("_", " ")}
           </span>
         ))}
@@ -1249,8 +1257,8 @@ function MlPredictionCard({ prediction }: { prediction?: MlPrediction | null }) 
 function MlFact({ label, value, strong }: { label: string; value: string; strong?: boolean }) {
   return (
     <div className="card-muted px-3 py-2">
-      <p className="text-[11px] font-bold uppercase tracking-wide text-steel-500">{label}</p>
-      <p className={`mt-1 truncate text-sm font-bold capitalize ${strong ? "text-steel-950" : "text-steel-800"}`}>{value}</p>
+      <p className="text-[11px] font-bold uppercase tracking-wide text-slate-500">{label}</p>
+      <p className={`mt-1 truncate text-sm font-bold capitalize ${strong ? "text-white" : "text-slate-300"}`}>{value}</p>
     </div>
   );
 }
@@ -1269,7 +1277,7 @@ function SelectedAssetCard({
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
           <p className="kicker">Asset dossier</p>
-          <h2 className="mt-1 truncate text-base font-bold text-steel-950">{equipment?.asset_type ?? "Loading asset"}</h2>
+          <h2 className="mt-1 truncate text-base font-bold text-white">{equipment?.asset_type ?? "Loading asset"}</h2>
         </div>
         {health && <RiskBadge risk={health.risk_level} />}
       </div>
@@ -1281,14 +1289,14 @@ function SelectedAssetCard({
       </div>
       <div className="card-muted mt-4 p-3">
         <div className="flex items-center gap-2">
-          <AlertTriangle size={16} className={alert ? "text-red-500" : "text-emerald-600"} />
-          <p className="text-xs font-bold uppercase tracking-wide text-steel-500">Current alert</p>
+          <AlertTriangle size={16} className={alert ? "text-red-400" : "text-emerald-400"} />
+          <p className="text-xs font-bold uppercase tracking-wide text-slate-500">Current alert</p>
         </div>
-        <p className="mt-2 text-sm font-semibold leading-5 text-steel-900">
+        <p className="mt-2 text-sm font-semibold leading-5 text-slate-200">
           {alert?.message ?? "No open alert on selected asset."}
         </p>
         {alert && (
-          <p className="mt-2 text-xs font-semibold text-steel-500">
+          <p className="mt-2 text-xs font-semibold text-slate-500">
             {alert.signal} = {alert.value} at {compactDate(alert.timestamp)}
           </p>
         )}
@@ -1300,8 +1308,8 @@ function SelectedAssetCard({
 function AssetFact({ label, value }: { label: string; value: string }) {
   return (
     <div className="card-muted px-3 py-2">
-      <p className="text-[11px] font-bold uppercase tracking-wide text-steel-500">{label}</p>
-      <p className="mt-1 truncate text-sm font-bold capitalize text-steel-900">{value}</p>
+      <p className="text-[11px] font-bold uppercase tracking-wide text-slate-500">{label}</p>
+      <p className="mt-1 truncate text-sm font-bold capitalize text-slate-200">{value}</p>
     </div>
   );
 }
@@ -1314,28 +1322,28 @@ function SparesCard({ health }: { health: EquipmentHealth | null }) {
       <div className="flex items-center justify-between gap-3">
         <div>
           <p className="kicker">Spares</p>
-          <h2 className="mt-1 text-base font-bold text-steel-950">Inventory pressure</h2>
+          <h2 className="mt-1 text-base font-bold text-white">Inventory pressure</h2>
         </div>
-        <span className="icon-tile h-9 w-9 bg-steel-50">
+        <span className="icon-tile h-9 w-9">
           <Package size={18} />
         </span>
       </div>
-      <div className="mt-4 divide-y divide-steel-100">
+      <div className="mt-4 divide-y divide-white/[0.06]">
         {spares.slice(0, 4).map((part) => (
           <div key={part.id} className="flex items-center justify-between gap-3 py-3 text-sm">
             <div className="min-w-0">
-              <p className="truncate font-bold text-steel-900">{part.name}</p>
-              <p className="text-xs font-semibold text-steel-500">{part.supplier}</p>
+              <p className="truncate font-bold text-slate-200">{part.name}</p>
+              <p className="text-xs font-semibold text-slate-500">{part.supplier}</p>
             </div>
             <div className="text-right">
-              <p className={`text-sm font-bold ${part.stock <= 1 && part.critical ? "text-red-600" : "text-steel-900"}`}>
+              <p className={`text-sm font-bold ${part.stock <= 1 && part.critical ? "text-red-400" : "text-slate-200"}`}>
                 {part.stock} in stock
               </p>
-              <p className="text-xs font-semibold text-steel-500">{part.lead_time_days}d lead</p>
+              <p className="text-xs font-semibold text-slate-500">{part.lead_time_days}d lead</p>
             </div>
           </div>
         ))}
-        {!spares.length && <p className="py-6 text-sm text-steel-500">Waiting for spare strategy.</p>}
+        {!spares.length && <p className="py-6 text-sm text-slate-500">Waiting for spare strategy.</p>}
       </div>
     </section>
   );
@@ -1347,9 +1355,9 @@ function ProcessDefectSummary({ defects }: { defects: ProcessDefect[] }) {
       <div className="flex items-center justify-between gap-3">
         <div>
           <p className="kicker">Process defects</p>
-          <h2 className="mt-1 text-base font-bold text-steel-950">Steel rule layer</h2>
+          <h2 className="mt-1 text-base font-bold text-white">Steel rule layer</h2>
         </div>
-        <span className="icon-tile h-9 w-9 bg-steel-50">
+        <span className="icon-tile h-9 w-9">
           <ShieldCheck size={18} />
         </span>
       </div>
@@ -1357,14 +1365,14 @@ function ProcessDefectSummary({ defects }: { defects: ProcessDefect[] }) {
         {defects.slice(0, 3).map((defect) => (
           <article key={defect.id} className="card-muted p-3">
             <div className="flex items-center justify-between gap-2">
-              <p className="truncate text-sm font-bold capitalize text-steel-900">{defect.defect_type.replaceAll("_", " ")}</p>
+              <p className="truncate text-sm font-bold capitalize text-slate-200">{defect.defect_type.replaceAll("_", " ")}</p>
               <RiskBadge risk={defect.severity} />
             </div>
-            <p className="mt-1 line-clamp-2 text-xs leading-5 text-steel-600">{defect.explanation}</p>
-            <p className="mt-2 text-xs font-bold text-coolant-700">{Math.round(defect.confidence * 100)}% confidence</p>
+            <p className="mt-1 line-clamp-2 text-xs leading-5 text-slate-400">{defect.explanation}</p>
+            <p className="mt-2 text-xs font-bold text-coolant-400">{Math.round(defect.confidence * 100)}% confidence</p>
           </article>
         ))}
-        {!defects.length && <p className="py-5 text-sm font-semibold text-steel-500">No specific process defect rule fired.</p>}
+        {!defects.length && <p className="py-5 text-sm font-semibold text-slate-500">No specific process defect rule fired.</p>}
       </div>
     </section>
   );
@@ -1380,9 +1388,9 @@ function FailureForecast({
       <div className="flex items-center justify-between gap-3">
         <div>
           <p className="kicker">Failure forecast</p>
-          <h2 className="mt-1 text-base font-bold text-steel-950">Next 7 days</h2>
+          <h2 className="mt-1 text-base font-bold text-white">Next 7 days</h2>
         </div>
-        <span className="icon-tile h-9 w-9 bg-steel-50">
+        <span className="icon-tile h-9 w-9">
           <Activity size={18} />
         </span>
       </div>
@@ -1394,19 +1402,19 @@ function FailureForecast({
           return (
             <div key={item.id} className="space-y-2">
               <div className="flex items-center justify-between gap-3 text-sm">
-                <p className="truncate font-bold text-steel-900">{item.name}</p>
-                <span className="text-xs font-bold text-steel-600">{probability}%</span>
+                <p className="truncate font-bold text-slate-200">{item.name}</p>
+                <span className="text-xs font-bold text-slate-400">{probability}%</span>
               </div>
               <div className="flex items-center gap-2">
-                <span className="h-2 flex-1 overflow-hidden rounded-full bg-steel-100">
-                  <span className={`block h-full rounded-full ${riskBarColor(item.risk)}`} style={{ width: `${probability}%` }} />
+                <span className="h-2 flex-1 overflow-hidden rounded-full bg-white/[0.1]">
+                  <span className={`block h-full rounded-full ${riskBarColor(item.risk)} transition-all duration-500`} style={{ width: `${probability}%` }} />
                 </span>
-                <span className="w-12 text-right text-xs font-semibold text-steel-500">{Math.max(1, Math.ceil(item.rul / 24))}d</span>
+                <span className="w-12 text-right text-xs font-semibold text-slate-500">{Math.max(1, Math.ceil(item.rul / 24))}d</span>
               </div>
             </div>
           );
         })}
-        {!equipment.length && <p className="py-6 text-sm text-steel-500">Failure model loading.</p>}
+        {!equipment.length && <p className="py-6 text-sm text-slate-500">Failure model loading.</p>}
       </div>
     </section>
   );
@@ -1443,13 +1451,13 @@ function RoleNotificationsCard({
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
           <p className="kicker">Notifications</p>
-          <h2 className="mt-1 text-base font-bold text-steel-950">Role-routed queue</h2>
-          <p className="mt-1 text-xs font-semibold text-steel-500">
+          <h2 className="mt-1 text-base font-bold text-white">Role-routed queue</h2>
+          <p className="mt-1 text-xs font-semibold text-slate-500">
             {sourceLabel} - {lastUpdated ? `Updated ${compactTime(lastUpdated)}` : "Waiting"}
           </p>
         </div>
         <div className="flex items-center gap-2">
-          <span className="rounded-full bg-red-50 px-2.5 py-1 text-xs font-bold text-red-600">{notifications.length}</span>
+          <span className="rounded-full bg-red-500/15 px-2.5 py-1 text-xs font-bold text-red-400">{notifications.length}</span>
           <button
             type="button"
             title="Refresh notifications"
@@ -1481,29 +1489,29 @@ function RoleNotificationsCard({
             key={item.id}
             type="button"
             onClick={() => onSelect(item.equipment_id)}
-            className="focus-ring grid w-full grid-cols-[auto_1fr] gap-3 rounded-md border border-steel-200/70 bg-white px-3 py-3 text-left shadow-sm transition hover:border-coolant-200 hover:bg-coolant-50/50"
+            className="focus-ring grid w-full grid-cols-[auto_1fr] gap-3 rounded-md border border-white/[0.06] bg-white/[0.02] px-3 py-3 text-left transition-all duration-300 hover:border-coolant-500/25 hover:bg-coolant-500/5"
           >
             <span className={`mt-0.5 flex h-8 w-8 items-center justify-center rounded-md ${
               item.severity === "critical"
-                ? "bg-red-50 text-red-500"
+                ? "bg-red-500/15 text-red-400"
                 : item.severity === "high"
-                  ? "bg-orange-50 text-orange-500"
-                  : "bg-amber-50 text-amber-500"
+                  ? "bg-orange-500/15 text-orange-400"
+                  : "bg-amber-500/15 text-amber-400"
             }`}>
               <Bell size={16} />
             </span>
             <span className="min-w-0">
               <span className="flex flex-wrap items-start justify-between gap-2">
-                <span className="min-w-0 flex-1 text-sm font-bold leading-5 text-steel-900">{item.title}</span>
-                <span className="shrink-0 text-[11px] font-bold text-steel-400">{compactTime(item.timestamp)}</span>
+                <span className="min-w-0 flex-1 text-sm font-bold leading-5 text-slate-200">{item.title}</span>
+                <span className="shrink-0 text-[11px] font-bold text-slate-600">{compactTime(item.timestamp)}</span>
               </span>
               <span className="mt-1 inline-flex"><RiskBadge risk={item.severity} /></span>
-              <span className="mt-1 line-clamp-2 text-xs leading-5 text-steel-600">{item.message}</span>
-              <span className="mt-2 block text-xs font-semibold text-coolant-700">{item.action}</span>
+              <span className="mt-1 line-clamp-2 text-xs leading-5 text-slate-400">{item.message}</span>
+              <span className="mt-2 block text-xs font-semibold text-coolant-400">{item.action}</span>
             </span>
           </button>
         ))}
-        {!notifications.length && <p className="py-6 text-sm font-semibold text-steel-500">No routed notifications for this role.</p>}
+        {!notifications.length && <p className="py-6 text-sm font-semibold text-slate-500">No routed notifications for this role.</p>}
       </div>
     </section>
   );
@@ -1515,32 +1523,32 @@ function ActiveAlertsCard({ alerts, selectedId, onSelect }: { alerts: Alert[]; s
       <div className="flex items-center justify-between gap-3">
         <div>
           <p className="kicker">Alerts</p>
-          <h2 className="mt-1 text-base font-bold text-steel-950">Live incident feed</h2>
+          <h2 className="mt-1 text-base font-bold text-white">Live incident feed</h2>
         </div>
-        <span className="rounded-full bg-red-50 px-2.5 py-1 text-xs font-bold text-red-600">{alerts.length}</span>
+        <span className="rounded-full bg-red-500/15 px-2.5 py-1 text-xs font-bold text-red-400">{alerts.length}</span>
       </div>
-      <div className="mt-4 divide-y divide-steel-100">
+      <div className="mt-4 divide-y divide-white/[0.06]">
         {alerts.slice(0, 5).map((alert) => (
           <button
             key={alert.id}
             type="button"
             onClick={() => onSelect(alert.equipment_id)}
-            className={`focus-ring grid w-full grid-cols-[auto_1fr] gap-3 rounded-md border px-3 py-3 text-left transition hover:border-coolant-200 hover:bg-steel-50 ${
-              selectedId === alert.equipment_id ? "border-coolant-200 bg-coolant-50/70 shadow-sm" : "border-transparent"
+            className={`focus-ring grid w-full grid-cols-[auto_1fr] gap-3 rounded-md border px-3 py-3 text-left transition-all duration-300 hover:border-coolant-500/25 hover:bg-white/[0.03] ${
+              selectedId === alert.equipment_id ? "border-coolant-500/30 bg-coolant-500/5" : "border-transparent"
             }`}
           >
             <span className={`mt-0.5 flex h-8 w-8 items-center justify-center rounded-md ${
               alert.severity === "critical"
-                ? "bg-red-50 text-red-500"
+                ? "bg-red-500/15 text-red-400"
                 : alert.severity === "high"
-                  ? "bg-orange-50 text-orange-500"
-                  : "bg-amber-50 text-amber-500"
+                  ? "bg-orange-500/15 text-orange-400"
+                  : "bg-amber-500/15 text-amber-400"
             }`}>
               <AlertTriangle size={16} />
             </span>
             <span className="min-w-0">
-              <span className="line-clamp-2 text-sm font-bold leading-5 text-steel-900">{alert.message}</span>
-              <span className="mt-1 flex flex-wrap items-center gap-2 text-xs font-semibold text-steel-500">
+              <span className="line-clamp-2 text-sm font-bold leading-5 text-slate-200">{alert.message}</span>
+              <span className="mt-1 flex flex-wrap items-center gap-2 text-xs font-semibold text-slate-500">
                 <span>{compactTime(alert.timestamp)}</span>
                 <span>{alert.signal}</span>
                 <RiskBadge risk={alert.severity} />
@@ -1549,7 +1557,7 @@ function ActiveAlertsCard({ alerts, selectedId, onSelect }: { alerts: Alert[]; s
           </button>
         ))}
         {!alerts.length && (
-          <div className="flex items-center gap-2 py-7 text-sm font-semibold text-emerald-700">
+          <div className="flex items-center gap-2 py-7 text-sm font-semibold text-emerald-400">
             <CheckCircle2 size={17} />
             No active alerts.
           </div>
@@ -1567,20 +1575,20 @@ function AgentTrace({ recommendation }: { recommendation: Recommendation | null 
       <div className="flex items-center justify-between gap-3">
         <div>
           <p className="kicker">Agent trace</p>
-          <h2 className="mt-1 text-base font-bold text-steel-950">Decision checkpoints</h2>
+          <h2 className="mt-1 text-base font-bold text-white">Decision checkpoints</h2>
         </div>
-        <span className="icon-tile h-9 w-9 border-blue-100 bg-blue-50 text-blue-600">
+        <span className="icon-tile h-9 w-9 border-purple-500/25 bg-purple-500/10 text-purple-400">
           <Sparkles size={18} />
         </span>
       </div>
       <div className="mt-4 grid gap-3 md:grid-cols-2 xl:grid-cols-4">
         {trace.slice(0, 4).map((node, index) => (
           <article key={`${String(node.node)}-${index}`} className="card-muted p-3">
-            <p className="text-xs font-bold uppercase tracking-wide text-blue-600">{String(node.node).replaceAll("_", " ")}</p>
-            <p className="mt-2 line-clamp-4 text-xs leading-5 text-steel-700">{String(node.summary)}</p>
+            <p className="text-xs font-bold uppercase tracking-wide text-coolant-400">{String(node.node).replaceAll("_", " ")}</p>
+            <p className="mt-2 line-clamp-4 text-xs leading-5 text-slate-400">{String(node.summary)}</p>
           </article>
         ))}
-        {!trace.length && <p className="text-sm text-steel-500">Waiting for agent reasoning.</p>}
+        {!trace.length && <p className="text-sm text-slate-500">Waiting for agent reasoning.</p>}
       </div>
     </section>
   );

@@ -16,9 +16,9 @@ const labels: Record<string, string> = {
 };
 
 const statusBars: Record<HealthMetric["status"], string> = {
-  low: "bg-emerald-500",
-  medium: "bg-amber-500",
-  high: "bg-orange-500",
+  low: "bg-emerald-400",
+  medium: "bg-amber-400",
+  high: "bg-orange-400",
   critical: "bg-signal"
 };
 
@@ -60,38 +60,38 @@ export function MetricTile({ metric }: { metric: HealthMetric }) {
   return (
     <div className="panel flex min-h-[198px] flex-col p-5">
       <div className="flex items-start justify-between gap-3">
-        <span className="icon-tile h-10 w-10 bg-steel-50">
+        <span className="icon-tile h-10 w-10 bg-white/[0.06]">
           <Icon size={18} />
         </span>
         <RiskBadge risk={metric.status} />
       </div>
 
       <div className="mt-3 min-w-0">
-        <p className="truncate text-xs font-bold uppercase tracking-wide text-steel-500">{labels[metric.name] ?? metric.name}</p>
-        <p className="mt-0.5 text-[11px] font-semibold text-steel-400">Current reading</p>
+        <p className="truncate text-xs font-bold uppercase tracking-wide text-slate-500">{labels[metric.name] ?? metric.name}</p>
+        <p className="mt-0.5 text-[11px] font-semibold text-slate-500">Current reading</p>
       </div>
 
       <div className="mt-4">
-        <p className="break-words text-[1.55rem] font-bold tabular-nums leading-8 tracking-normal text-steel-950">
+        <p className="break-words text-[1.55rem] font-bold tabular-nums leading-8 tracking-normal text-white">
           {displayValue}
-          <span className="ml-1 whitespace-nowrap text-sm font-semibold text-steel-500">{metric.unit}</span>
+          <span className="ml-1 whitespace-nowrap text-sm font-semibold text-slate-500">{metric.unit}</span>
         </p>
-        <p className="mt-1 text-xs font-bold uppercase tracking-wide text-steel-500">{metric.status}</p>
+        <p className="mt-1 text-xs font-bold uppercase tracking-wide text-slate-500">{metric.status}</p>
       </div>
 
-      <dl className="mt-3 grid grid-cols-2 gap-3 border-t border-steel-100 pt-3 text-xs">
+      <dl className="mt-3 grid grid-cols-2 gap-3 border-t border-white/[0.06] pt-3 text-xs">
         <div className="card-muted min-w-0 px-2 py-2">
-          <dt className="font-bold uppercase tracking-wide text-steel-400">Limit</dt>
-          <dd className="mt-1 break-words font-semibold leading-5 text-steel-700">{metric.threshold}</dd>
+          <dt className="font-bold uppercase tracking-wide text-slate-500">Limit</dt>
+          <dd className="mt-1 break-words font-semibold leading-5 text-slate-300">{metric.threshold}</dd>
         </div>
         <div className="card-muted min-w-0 px-2 py-2">
-          <dt className="font-bold uppercase tracking-wide text-steel-400">Remark</dt>
-          <dd className="mt-1 break-words font-semibold leading-5 text-steel-700">{remarks[metric.status]}</dd>
+          <dt className="font-bold uppercase tracking-wide text-slate-500">Remark</dt>
+          <dd className="mt-1 break-words font-semibold leading-5 text-slate-300">{remarks[metric.status]}</dd>
         </div>
       </dl>
 
       <div className="mt-auto pt-4">
-        <div className="h-1.5 overflow-hidden rounded-full bg-steel-100">
+        <div className="h-1.5 overflow-hidden rounded-full bg-white/[0.1]">
           <div className={`h-full rounded-full ${statusBars[metric.status]}`} style={{ width: `${ratio}%` }} />
         </div>
       </div>

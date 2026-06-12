@@ -15,10 +15,10 @@ import {
 import type { Equipment, EquipmentHealth, HealthMetric, RiskLevel } from "@/lib/types";
 
 const riskColors: Record<RiskLevel, string> = {
-  low: "#0f9b8e",
-  medium: "#d89b2b",
+  low: "#14b8a6",
+  medium: "#f59e0b",
   high: "#d97706",
-  critical: "#d33f49"
+  critical: "#f43f5e"
 };
 
 type RiskMatrixPoint = {
@@ -90,7 +90,7 @@ function emptyPanel(title: string, detail: string) {
   return (
     <section className="panel flex min-h-[360px] flex-col p-5">
       <p className="muted-label">{title}</p>
-      <div className="flex flex-1 items-center justify-center text-center text-sm font-semibold text-steel-500">
+      <div className="flex flex-1 items-center justify-center text-center text-sm font-semibold text-slate-500">
         {detail}
       </div>
     </section>
@@ -101,10 +101,10 @@ function TrendTooltip({ active, payload }: { active?: boolean; payload?: Array<{
   if (!active || !payload?.length) return null;
   const point = payload[0].payload;
   return (
-    <div className="rounded-md border border-steel-200 bg-white px-3 py-2 text-xs shadow-command">
-      <p className="font-bold text-steel-950">{point.time}</p>
-      <p className="mt-1 font-semibold text-coolant-700">Probability: {percent(point.probability)}</p>
-      <p className="font-semibold text-steel-500">Threshold: {percent(point.threshold)}</p>
+    <div className="rounded-lg border border-white/[0.1] bg-[rgba(15,23,42,0.95)] px-3 py-2 text-xs shadow-[0_20px_50px_rgba(0,0,0,0.5)]">
+      <p className="font-bold text-white">{point.time}</p>
+      <p className="mt-1 font-semibold text-coolant-400">Probability: {percent(point.probability)}</p>
+      <p className="font-semibold text-slate-400">Threshold: {percent(point.threshold)}</p>
     </div>
   );
 }
@@ -113,11 +113,11 @@ function RiskTooltip({ active, payload }: { active?: boolean; payload?: Array<{ 
   if (!active || !payload?.length) return null;
   const point = payload[0].payload;
   return (
-    <div className="rounded-md border border-steel-200 bg-white px-3 py-2 text-xs shadow-command">
-      <p className="font-bold text-steel-950">{point.name}</p>
-      <p className="mt-1 font-semibold text-steel-600">Criticality: {point.criticality}/100</p>
-      <p className="font-semibold text-steel-600">Priority: {point.priority}/100</p>
-      <p className="font-semibold text-steel-600">ML failure: {percent(point.probability)}</p>
+    <div className="rounded-lg border border-white/[0.1] bg-[rgba(15,23,42,0.95)] px-3 py-2 text-xs shadow-[0_20px_50px_rgba(0,0,0,0.5)]">
+      <p className="font-bold text-white">{point.name}</p>
+      <p className="mt-1 font-semibold text-slate-300">Criticality: {point.criticality}/100</p>
+      <p className="font-semibold text-slate-300">Priority: {point.priority}/100</p>
+      <p className="font-semibold text-slate-300">ML failure: {percent(point.probability)}</p>
     </div>
   );
 }
@@ -141,27 +141,27 @@ function FailureProbabilityTrend({ health }: { health: EquipmentHealth | null })
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
           <p className="muted-label">Failure probability trend</p>
-          <h3 className="mt-1 truncate text-base font-bold text-steel-950">{health.equipment.name}</h3>
+          <h3 className="mt-1 truncate text-base font-bold text-white">{health.equipment.name}</h3>
         </div>
-        <span className={`rounded-md border px-2 py-1 text-xs font-bold ${latest.likely ? "border-red-100 bg-red-50 text-red-700" : "border-coolant-100 bg-coolant-50 text-coolant-700"}`}>
+        <span className={`rounded-md border px-2 py-1 text-xs font-bold ${latest.likely ? "border-red-500/30 bg-red-500/15 text-red-400" : "border-coolant-500/30 bg-coolant-500/15 text-coolant-400"}`}>
           {percent(latest.probability)}
         </span>
       </div>
       <div className="mt-4 h-[235px]">
         <ResponsiveContainer width="100%" height="100%">
           <LineChart data={rows} margin={{ top: 8, right: 10, left: -18, bottom: 0 }}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#dfe7ea" vertical={false} />
-            <XAxis dataKey="sample" axisLine={false} tickLine={false} tick={{ fill: "#637985", fontSize: 11 }} />
+            <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)" vertical={false} />
+            <XAxis dataKey="sample" axisLine={false} tickLine={false} tick={{ fill: "#94a3b8", fontSize: 11 }} />
             <YAxis
               axisLine={false}
               tickLine={false}
-              tick={{ fill: "#637985", fontSize: 11 }}
+              tick={{ fill: "#94a3b8", fontSize: 11 }}
               domain={[0, 100]}
               tickFormatter={(value) => `${value}%`}
             />
             <Tooltip content={<TrendTooltip />} />
-            <Line type="monotone" dataKey="threshold" stroke="#8da0aa" strokeDasharray="5 5" strokeWidth={2} dot={false} />
-            <Line type="monotone" dataKey="probability" stroke="#0f9b8e" strokeWidth={3} dot={{ r: 3 }} activeDot={{ r: 5 }} />
+            <Line type="monotone" dataKey="threshold" stroke="#64748b" strokeDasharray="5 5" strokeWidth={2} dot={false} />
+            <Line type="monotone" dataKey="probability" stroke="#2dd4bf" strokeWidth={3} dot={{ r: 3 }} activeDot={{ r: 5 }} />
           </LineChart>
         </ResponsiveContainer>
       </div>
@@ -202,16 +202,16 @@ function RiskCriticalityMatrix({
       <div className="flex items-start justify-between gap-3">
         <div>
           <p className="muted-label">Risk vs criticality</p>
-          <h3 className="mt-1 text-base font-bold text-steel-950">Priority matrix</h3>
+          <h3 className="mt-1 text-base font-bold text-white">Priority matrix</h3>
         </div>
-        <span className="card-muted px-2 py-1 text-xs font-bold text-steel-600">
+        <span className="card-muted px-2 py-1 text-xs font-bold text-slate-400">
           {rows.length} assets
         </span>
       </div>
       <div className="mt-4 h-[235px]">
         <ResponsiveContainer width="100%" height="100%">
           <ScatterChart margin={{ top: 10, right: 10, bottom: 8, left: -16 }}>
-            <CartesianGrid stroke="#dfe7ea" strokeDasharray="3 3" />
+            <CartesianGrid stroke="rgba(255,255,255,0.06)" strokeDasharray="3 3" />
             <XAxis
               dataKey="criticality"
               name="Criticality"
@@ -219,7 +219,7 @@ function RiskCriticalityMatrix({
               domain={[0, 100]}
               axisLine={false}
               tickLine={false}
-              tick={{ fill: "#637985", fontSize: 11 }}
+              tick={{ fill: "#94a3b8", fontSize: 11 }}
               tickFormatter={(value) => `${value}`}
             />
             <YAxis
@@ -229,13 +229,13 @@ function RiskCriticalityMatrix({
               domain={[0, 100]}
               axisLine={false}
               tickLine={false}
-              tick={{ fill: "#637985", fontSize: 11 }}
+              tick={{ fill: "#94a3b8", fontSize: 11 }}
               tickFormatter={(value) => `${value}`}
             />
-            <Tooltip cursor={{ stroke: "#8da0aa", strokeDasharray: "3 3" }} content={<RiskTooltip />} />
+            <Tooltip cursor={{ stroke: "#64748b", strokeDasharray: "3 3" }} content={<RiskTooltip />} />
             <Scatter data={rows} onClick={(point: RiskMatrixPoint) => onSelect(point.id)}>
               {rows.map((point) => (
-                <Cell key={point.id} fill={riskColors[point.risk]} stroke={point.selected ? "#172126" : "#ffffff"} strokeWidth={point.selected ? 3 : 1.5} />
+                <Cell key={point.id} fill={riskColors[point.risk]} stroke={point.selected ? "#ffffff" : "rgba(255,255,255,0.3)"} strokeWidth={point.selected ? 3 : 1.5} />
               ))}
             </Scatter>
           </ScatterChart>
@@ -269,9 +269,9 @@ function TopFailureDrivers({ health }: { health: EquipmentHealth | null }) {
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
           <p className="muted-label">Top failure drivers</p>
-          <h3 className="mt-1 truncate text-base font-bold text-steel-950">{health.equipment.name}</h3>
+          <h3 className="mt-1 truncate text-base font-bold text-white">{health.equipment.name}</h3>
         </div>
-        <span className="card-muted px-2 py-1 text-xs font-bold text-steel-600">
+        <span className="card-muted px-2 py-1 text-xs font-bold text-slate-400">
           ML signals
         </span>
       </div>
@@ -280,14 +280,14 @@ function TopFailureDrivers({ health }: { health: EquipmentHealth | null }) {
           <div key={driver.signal}>
             <div className="flex items-center justify-between gap-3 text-xs">
               <div className="flex min-w-0 items-center gap-2">
-                <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-md border border-steel-200 bg-white text-[10px] font-bold text-steel-600 shadow-sm">
+                <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-md border border-white/[0.08] bg-white/[0.06] text-[10px] font-bold text-slate-400">
                   {index + 1}
                 </span>
-                <span className="truncate font-bold text-steel-900">{driver.label}</span>
+                <span className="truncate font-bold text-white">{driver.label}</span>
               </div>
-              <span className="shrink-0 font-semibold text-steel-500">{driver.valueLabel}</span>
+              <span className="shrink-0 font-semibold text-slate-500">{driver.valueLabel}</span>
             </div>
-            <div className="mt-2 h-2 overflow-hidden rounded-full bg-steel-100">
+            <div className="mt-2 h-2 overflow-hidden rounded-full bg-white/[0.1]">
               <div
                 className="h-full rounded-full"
                 style={{
@@ -296,7 +296,7 @@ function TopFailureDrivers({ health }: { health: EquipmentHealth | null }) {
                 }}
               />
             </div>
-            <div className="mt-1 text-right text-[11px] font-bold text-steel-500">{driver.score}/100 risk load</div>
+            <div className="mt-1 text-right text-[11px] font-bold text-slate-500">{driver.score}/100 risk load</div>
           </div>
         ))}
       </div>

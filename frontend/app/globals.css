@@ -2,10 +2,29 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  color-scheme: light;
-  --background: #f3f6f9;
-  --foreground: #111c22;
+@layer base {
+  :root {
+    --background: 228 22% 6%;
+    --foreground: 210 20% 95%;
+    --card: 228 18% 9%;
+    --card-foreground: 210 20% 95%;
+    --popover: 228 18% 9%;
+    --popover-foreground: 210 20% 95%;
+    --primary: 265 90% 65%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 228 16% 13%;
+    --secondary-foreground: 210 15% 75%;
+    --muted: 228 14% 15%;
+    --muted-foreground: 215 12% 52%;
+    --accent: 265 60% 14%;
+    --accent-foreground: 265 80% 75%;
+    --destructive: 350 89% 60%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 228 14% 17%;
+    --input: 228 14% 17%;
+    --ring: 265 90% 65%;
+    --radius: 0.625rem;
+  }
 }
 
 * {
@@ -13,7 +32,7 @@
 }
 
 html {
-  background: var(--background);
+  background: hsl(228 22% 5%);
   scroll-behavior: smooth;
 }
 
@@ -21,14 +40,32 @@ body {
   margin: 0;
   min-height: 100vh;
   background:
-    linear-gradient(180deg, rgba(246, 249, 252, 0.98) 0%, rgba(240, 245, 249, 0.98) 48%, rgba(234, 241, 245, 0.98) 100%),
-    linear-gradient(90deg, rgba(75, 101, 114, 0.08) 0 1px, transparent 1px 100%),
-    linear-gradient(0deg, rgba(75, 101, 114, 0.07) 0 1px, transparent 1px 100%);
-  background-size: auto, 48px 48px, 48px 48px;
-  color: var(--foreground);
-  font-family: Inter, Aptos, "Segoe UI Variable", "Segoe UI", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    radial-gradient(ellipse 90% 55% at 50% -15%, hsl(265 60% 20% / 0.35) 0%, transparent 55%),
+    radial-gradient(ellipse 70% 50% at 85% 20%, hsl(200 80% 20% / 0.2) 0%, transparent 45%),
+    radial-gradient(ellipse 50% 40% at 10% 80%, hsl(330 60% 18% / 0.15) 0%, transparent 40%),
+    radial-gradient(ellipse 60% 50% at 60% 90%, hsl(173 60% 14% / 0.12) 0%, transparent 45%),
+    linear-gradient(180deg, hsl(228 22% 5%) 0%, hsl(228 20% 7%) 50%, hsl(228 18% 6%) 100%);
+  background-attachment: fixed;
+  color: hsl(var(--foreground));
+  font-family: var(--font-inter), Inter, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
   font-feature-settings: "cv02", "cv03", "cv04", "cv11";
   text-rendering: geometricPrecision;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background:
+    linear-gradient(90deg, rgba(255,255,255,0.015) 0 1px, transparent 1px 100%),
+    linear-gradient(0deg, rgba(255,255,255,0.01) 0 1px, transparent 1px 100%);
+  background-size: 64px 64px;
+  pointer-events: none;
+  z-index: 0;
+  mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 30%, transparent 70%);
+  -webkit-mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 30%, transparent 70%);
 }
 
 button,
@@ -47,17 +84,18 @@ select {
 }
 
 .focus-ring:focus-visible {
-  outline: 2px solid #0f9b8e;
+  outline: 2px solid hsl(var(--ring));
   outline-offset: 2px;
 }
 
 ::selection {
-  background: rgba(15, 155, 142, 0.22);
+  background: hsl(265 90% 65% / 0.35);
+  color: white;
 }
 
 ::-webkit-scrollbar {
-  height: 10px;
-  width: 10px;
+  height: 6px;
+  width: 6px;
 }
 
 ::-webkit-scrollbar-track {
@@ -65,58 +103,202 @@ select {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(127, 150, 163, 0.38);
-  border: 3px solid transparent;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid transparent;
   border-radius: 999px;
   background-clip: padding-box;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(99, 121, 133, 0.52);
-  border: 3px solid transparent;
+  background: rgba(167, 139, 250, 0.3);
+  border: 1px solid transparent;
   background-clip: padding-box;
 }
 
 @layer components {
   .panel {
-    @apply rounded-lg border border-steel-200/90 bg-white shadow-card shadow-insetline backdrop-blur transition-colors;
+    @apply relative rounded-xl border transition-all duration-300;
+    background: rgba(255, 255, 255, 0.03);
+    border-color: rgba(255, 255, 255, 0.06);
+    backdrop-filter: blur(24px) saturate(1.3);
+    -webkit-backdrop-filter: blur(24px) saturate(1.3);
     box-shadow:
-      0 14px 34px rgba(14, 23, 27, 0.07),
-      0 1px 0 rgba(255, 255, 255, 0.86) inset;
+      0 1px 0 rgba(255, 255, 255, 0.04) inset,
+      0 6px 24px rgba(0, 0, 0, 0.2);
+  }
+
+  .panel::after {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    border-radius: inherit;
+    background: linear-gradient(135deg, transparent 25%, rgba(167, 139, 250, 0.06) 50%, rgba(56, 189, 248, 0.04) 75%, transparent 100%);
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+  }
+
+  .panel:hover::after {
+    opacity: 1;
   }
 
   .panel:hover {
-    border-color: rgba(99, 121, 133, 0.54);
+    border-color: rgba(167, 139, 250, 0.18);
+    box-shadow:
+      0 1px 0 rgba(255, 255, 255, 0.04) inset,
+      0 8px 32px rgba(0, 0, 0, 0.3),
+      0 0 24px rgba(167, 139, 250, 0.05);
   }
 
   .panel-soft {
-    @apply rounded-lg border border-steel-200/90 bg-steel-50/70 shadow-sm;
-    box-shadow:
-      0 10px 24px rgba(14, 23, 27, 0.045),
-      0 1px 0 rgba(255, 255, 255, 0.78) inset;
+    @apply relative rounded-xl border;
+    background: rgba(255, 255, 255, 0.02);
+    border-color: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(12px) saturate(1.2);
+    -webkit-backdrop-filter: blur(12px) saturate(1.2);
+    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.03) inset;
+  }
+
+  .panel-soft::after {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    border-radius: inherit;
+    background: linear-gradient(135deg, transparent 40%, rgba(167, 139, 250, 0.05), transparent 60%);
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+  }
+
+  .panel-soft:hover::after {
+    opacity: 1;
   }
 
   .card-muted {
-    @apply rounded-md border border-steel-200/80 bg-steel-50/80 shadow-insetline;
+    @apply relative rounded-lg border;
+    background: rgba(255, 255, 255, 0.025);
+    border-color: rgba(255, 255, 255, 0.055);
+    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.02) inset;
   }
 
   .icon-tile {
-    @apply flex shrink-0 items-center justify-center rounded-md border border-steel-200 bg-white text-steel-700 shadow-sm;
+    @apply flex shrink-0 items-center justify-center rounded-lg border transition-all duration-200;
+    background: rgba(255, 255, 255, 0.04);
+    border-color: rgba(255, 255, 255, 0.07);
+    color: hsl(210 15% 60%);
+  }
+
+  .icon-tile:hover {
+    border-color: rgba(167, 139, 250, 0.35);
+    background: rgba(167, 139, 250, 0.1);
+    color: hsl(265 90% 75%);
   }
 
   .control-button {
-    @apply focus-ring inline-flex items-center justify-center rounded-md border border-steel-200 bg-white text-steel-700 shadow-sm transition hover:border-coolant-200 hover:bg-coolant-50/60 hover:text-coolant-800 disabled:opacity-60;
+    @apply focus-ring inline-flex items-center justify-center rounded-lg border transition-all duration-200;
+    background: rgba(255, 255, 255, 0.035);
+    border-color: rgba(255, 255, 255, 0.07);
+    color: hsl(210 15% 65%);
+  }
+
+  .control-button:hover {
+    border-color: rgba(167, 139, 250, 0.3);
+    background: rgba(167, 139, 250, 0.08);
+    color: hsl(265 90% 78%);
+    box-shadow: 0 0 18px rgba(167, 139, 250, 0.08);
+  }
+
+  .control-button:active {
+    background: rgba(167, 139, 250, 0.15);
+  }
+
+  .control-button:disabled {
+    opacity: 0.35;
   }
 
   .kicker {
-    @apply text-[11px] font-bold uppercase tracking-normal text-coolant-700;
+    @apply text-[11px] font-bold uppercase tracking-widest;
+    background: linear-gradient(135deg, hsl(265 90% 72%), hsl(200 90% 65%));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
   }
 
   .muted-label {
-    @apply text-xs font-semibold uppercase tracking-normal text-steel-500;
+    @apply text-xs font-semibold uppercase tracking-wider;
+    color: hsl(215 12% 50%);
   }
 
   .field-control {
-    @apply focus-ring rounded-md border-steel-200 bg-white text-steel-800 shadow-sm transition placeholder:text-steel-400 hover:border-steel-300;
+    @apply focus-ring rounded-lg border px-3 py-2 transition-all duration-150;
+    background: rgba(255, 255, 255, 0.04);
+    border-color: rgba(255, 255, 255, 0.08);
+    color: hsl(210 20% 92%);
   }
+
+  .field-control::placeholder {
+    color: hsl(215 12% 40%);
+  }
+
+  .field-control:hover {
+    border-color: rgba(167, 139, 250, 0.25);
+  }
+
+  .field-control:focus {
+    border-color: hsl(var(--ring));
+    box-shadow: 0 0 0 3px hsl(var(--ring) / 0.15), 0 0 18px rgba(167, 139, 250, 0.08);
+  }
+}
+
+/* ── Animations ── */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes glow-pulse {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 1; }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-3px); }
+}
+
+@keyframes gradient-shift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes aurora-slide {
+  0% { background-position: 0% 50%; }
+  33% { background-position: 50% 100%; }
+  66% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.animate-shimmer {
+  background: linear-gradient(90deg, transparent 25%, rgba(167,139,250,0.06) 50%, transparent 75%);
+  background-size: 200% 100%;
+  animation: shimmer 2s ease-in-out infinite;
+}
+
+.animate-glow-pulse {
+  animation: glow-pulse 2.5s ease-in-out infinite;
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+.animate-gradient {
+  background-size: 200% 200%;
+  animation: gradient-shift 3s ease infinite;
+}
+
+.animate-aurora {
+  background-size: 300% 300%;
+  animation: aurora-slide 6s ease infinite;
 }

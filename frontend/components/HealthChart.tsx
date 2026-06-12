@@ -13,7 +13,7 @@ import {
 } from "recharts";
 import type { EquipmentHealth } from "@/lib/types";
 
-const colors = ["#0f9b8e", "#2563eb", "#c46a2b", "#d33f49", "#4b6572"];
+const colors = ["#2dd4bf", "#fbbf24", "#fb7185", "#c084fc", "#38bdf8"];
 
 function labelMetric(metric: string) {
   return metric
@@ -55,37 +55,39 @@ export function HealthChart({ health }: { health: EquipmentHealth }) {
       <div className="flex items-center justify-between gap-3">
         <div>
           <p className="muted-label">Telemetry trend</p>
-          <h3 className="mt-1 text-base font-bold text-steel-900">{health.equipment.name}</h3>
-          <p className="mt-1 text-xs font-semibold text-steel-500">Signals shown as percent of their limit</p>
+          <h3 className="mt-1 text-base font-bold text-white">{health.equipment.name}</h3>
+          <p className="mt-1 text-xs font-semibold text-slate-500">Signals shown as percent of their limit</p>
         </div>
-        <span className="card-muted px-2 py-1 text-xs font-semibold text-steel-600">
+        <span className="card-muted px-2 py-1 text-xs font-semibold text-slate-400">
           {rows.length} samples
         </span>
       </div>
       <div className="mt-4 h-[240px]">
         <ResponsiveContainer width="100%" height="100%">
           <LineChart data={rows} margin={{ top: 10, right: 22, left: 0, bottom: 0 }}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#dfe7ea" vertical={false} />
-            <XAxis dataKey="time" axisLine={false} tickLine={false} tick={{ fill: "#637985", fontSize: 12 }} />
+            <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)" vertical={false} />
+            <XAxis dataKey="time" axisLine={false} tickLine={false} tick={{ fill: "#94a3b8", fontSize: 12 }} />
             <YAxis
               axisLine={false}
               tickLine={false}
-              tick={{ fill: "#637985", fontSize: 12 }}
+              tick={{ fill: "#94a3b8", fontSize: 12 }}
               width={42}
               domain={[0, 140]}
               tickFormatter={(value) => `${value}%`}
             />
-            <ReferenceLine y={100} stroke="#971d2a" strokeDasharray="4 4" />
+            <ReferenceLine y={100} stroke="#f87171" strokeDasharray="4 4" opacity={0.5} />
             <Tooltip
               contentStyle={{
-                borderColor: "#cfd9de",
-                borderRadius: 8,
-                boxShadow: "0 18px 44px rgba(14,23,27,0.12)"
+                background: 'rgba(15,23,42,0.95)',
+                borderColor: 'rgba(255,255,255,0.1)',
+                borderRadius: 10,
+                boxShadow: '0 20px 50px rgba(0,0,0,0.5)',
+                color: '#e2e8f0'
               }}
-              labelStyle={{ color: "#172126", fontWeight: 700 }}
+              labelStyle={{ color: '#ffffff', fontWeight: 700 }}
               formatter={(value, name) => [`${Number(value).toFixed(0)}%`, name]}
             />
-            <Legend verticalAlign="top" height={28} iconType="line" wrapperStyle={{ fontSize: 12, fontWeight: 700 }} />
+            <Legend verticalAlign="top" height={28} iconType="line" wrapperStyle={{ fontSize: 12, fontWeight: 700, color: '#94a3b8' }} />
             {metricKeys.map((key, index) => (
               <Line
                 key={key}

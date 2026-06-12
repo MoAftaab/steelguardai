@@ -104,7 +104,7 @@ function FormattedAssistantMessage({ text }: { text: string }) {
       {assistantBlocks(text).map((block, index) => {
         if (block.type === "heading") {
           return (
-            <p key={`${block.type}-${index}`} className="font-bold text-steel-950">
+            <p key={`${block.type}-${index}`} className="font-bold text-white">
               {block.text}
             </p>
           );
@@ -181,9 +181,9 @@ export function WizardChat({ equipmentId, equipmentName, alertId, onResponse, on
 
   return (
     <section className="panel overflow-hidden">
-      <div className="relative flex items-center justify-between gap-3 border-b border-steel-100 bg-white p-5">
-        <h2 className="flex items-center gap-2 text-base font-bold text-steel-950">
-          <Bot size={18} className="text-blue-600" />
+      <div className="relative flex items-center justify-between gap-3 border-b border-white/[0.06] bg-white/[0.02] p-5">
+        <h2 className="flex items-center gap-2 text-base font-bold text-white">
+          <Bot size={18} className="text-coolant-400" />
           AI Maintenance Copilot
         </h2>
         <div className="flex items-center gap-2">
@@ -191,7 +191,7 @@ export function WizardChat({ equipmentId, equipmentName, alertId, onResponse, on
             type="button"
             title="New chat"
             onClick={startNewChat}
-            className="focus-ring inline-flex h-8 items-center gap-1 rounded-md border border-steel-200 bg-white px-3 text-xs font-semibold text-steel-700 shadow-sm transition hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700"
+            className="control-button focus-ring inline-flex h-8 items-center gap-1 rounded-md px-3 text-xs font-semibold transition"
           >
             <Plus size={14} />
             New Chat
@@ -200,17 +200,17 @@ export function WizardChat({ equipmentId, equipmentName, alertId, onResponse, on
             type="button"
             title="More options"
             onClick={() => setMenuOpen((value) => !value)}
-            className="focus-ring inline-flex h-8 w-8 items-center justify-center rounded-md text-steel-500 transition hover:bg-steel-50"
+            className="focus-ring inline-flex h-8 w-8 items-center justify-center rounded-md text-slate-400 transition hover:bg-white/[0.08] hover:text-slate-200"
           >
             <MoreVertical size={16} />
           </button>
         </div>
         {menuOpen && (
-          <div className="absolute right-5 top-16 z-10 w-52 rounded-md border border-steel-200 bg-white p-1.5 text-sm shadow-command">
+          <div className="absolute right-5 top-16 z-10 w-52 rounded-md border border-white/[0.1] bg-slate-900/95 p-1.5 text-sm shadow-xl backdrop-blur-xl">
             <button
               type="button"
               onClick={startNewChat}
-              className="focus-ring flex w-full items-center gap-2 rounded-md px-3 py-2 text-left font-semibold text-steel-700 transition hover:bg-steel-50"
+              className="focus-ring flex w-full items-center gap-2 rounded-md px-3 py-2 text-left font-semibold text-slate-300 transition hover:bg-white/[0.08] hover:text-white"
             >
               <RotateCcw size={15} />
               Reset conversation
@@ -218,7 +218,7 @@ export function WizardChat({ equipmentId, equipmentName, alertId, onResponse, on
             <button
               type="button"
               onClick={() => usePrompt("Summarize this alert and list the safest next actions.")}
-              className="focus-ring flex w-full items-center gap-2 rounded-md px-3 py-2 text-left font-semibold text-steel-700 transition hover:bg-steel-50"
+              className="focus-ring flex w-full items-center gap-2 rounded-md px-3 py-2 text-left font-semibold text-slate-300 transition hover:bg-white/[0.08] hover:text-white"
             >
               <ClipboardList size={15} />
               Use alert summary
@@ -226,35 +226,35 @@ export function WizardChat({ equipmentId, equipmentName, alertId, onResponse, on
           </div>
         )}
       </div>
-      <div ref={messageListRef} className="max-h-[430px] min-h-[280px] space-y-4 overflow-y-auto bg-gradient-to-b from-white to-steel-50/70 p-5">
+      <div ref={messageListRef} className="max-h-[430px] min-h-[280px] space-y-4 overflow-y-auto bg-white/[0.02] p-5">
         {messages.map((message, index) => (
           <div
             key={`${message.role}-${index}`}
             className={`flex gap-3 ${message.role === "user" ? "justify-end" : "justify-start"}`}
           >
             {message.role === "assistant" && (
-              <span className="mt-1 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-blue-600 text-white shadow-sm">
+              <span className="mt-1 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-purple-500/20 text-purple-400 ring-1 ring-purple-500/30">
                 <Bot size={16} />
               </span>
             )}
             <div
-              className={`max-w-[86%] break-words rounded-lg px-4 py-3 text-sm leading-6 shadow-sm ${
+              className={`max-w-[86%] break-words rounded-lg px-4 py-3 text-sm leading-6 ${
                 message.role === "user"
-                  ? "bg-blue-600 text-white"
-                  : "border border-steel-200/80 bg-white text-steel-800"
+                  ? "bg-gradient-to-r from-coolant-600 to-coolant-500 text-white shadow-md shadow-coolant-500/20"
+                  : "border border-white/[0.08] border-l-2 border-l-purple-500/50 bg-white/[0.05] text-slate-200"
               }`}
             >
               {message.role === "assistant" ? <FormattedAssistantMessage text={message.text} /> : <p>{message.text}</p>}
             </div>
             {message.role === "user" && (
-              <span className="mt-1 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-steel-200 text-steel-900 shadow-sm">
+              <span className="mt-1 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white/[0.1] text-slate-300 ring-1 ring-white/[0.12]">
                 <User size={16} />
               </span>
             )}
           </div>
         ))}
       </div>
-      <div className="border-t border-steel-100 p-5">
+      <div className="border-t border-white/[0.06] p-5">
         <form onSubmit={onSubmit} className="flex gap-2">
           <input
             value={input}
@@ -267,7 +267,7 @@ export function WizardChat({ equipmentId, equipmentName, alertId, onResponse, on
             type="submit"
             title="Send query"
             disabled={busy}
-            className="focus-ring inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-blue-600 text-white shadow-sm transition hover:bg-blue-700 disabled:opacity-60"
+            className="focus-ring inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-gradient-to-br from-coolant-500 to-coolant-600 text-white shadow-sm transition-all duration-300 hover:shadow-[0_0_20px_rgba(20,184,166,0.3)] disabled:opacity-60"
           >
             <Send size={18} />
           </button>
@@ -278,7 +278,7 @@ export function WizardChat({ equipmentId, equipmentName, alertId, onResponse, on
               key={prompt}
               type="button"
               onClick={() => usePrompt(prompt)}
-              className="focus-ring rounded-md border border-steel-200 bg-white px-3 py-2 text-xs font-semibold text-steel-700 shadow-sm transition hover:border-blue-200 hover:bg-blue-50 hover:text-blue-600"
+              className="focus-ring rounded-md border border-white/[0.08] bg-white/[0.06] px-3 py-2 text-xs font-semibold text-slate-400 shadow-sm transition-all duration-300 hover:border-coolant-500/30 hover:bg-coolant-500/10 hover:text-coolant-400"
             >
               {prompt}
             </button>

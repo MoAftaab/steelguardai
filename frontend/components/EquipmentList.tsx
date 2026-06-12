@@ -13,7 +13,7 @@ export function EquipmentList({ equipment, selectedId, healthMap, onSelect }: Pr
   return (
     <div className="space-y-3">
       {!equipment.length && (
-        <div className="rounded-lg border border-dashed border-steel-300 bg-white/80 p-4 text-sm font-semibold text-steel-500 shadow-sm">
+        <div className="rounded-lg border border-white/[0.08] bg-white/[0.03] p-4 text-sm font-semibold text-slate-500">
           No matching assets.
         </div>
       )}
@@ -26,24 +26,24 @@ export function EquipmentList({ equipment, selectedId, healthMap, onSelect }: Pr
             type="button"
             title={`Open ${item.name}`}
             onClick={() => onSelect(item.id)}
-            className={`focus-ring relative min-h-[116px] w-full overflow-hidden rounded-lg border p-4 text-left shadow-card transition hover:-translate-y-0.5 hover:border-coolant-300 hover:shadow-lifted ${
+            className={`focus-ring relative min-h-[116px] w-full overflow-hidden rounded-lg border p-4 text-left transition-all duration-300 hover:-translate-y-0.5 hover:border-coolant-500/30 hover:bg-white/[0.06] hover:shadow-[0_0_20px_rgba(20,184,166,0.15)] ${
               selected
-                ? "border-coolant-300 bg-coolant-50/80 shadow-[0_0_0_3px_rgba(15,155,142,0.10)]"
-                : "border-steel-200/90 bg-white/95"
+                ? "border-coolant-500/40 bg-coolant-500/10 shadow-[0_0_0_3px_rgba(20,184,166,0.15)]"
+                : "border-white/[0.08] bg-white/[0.03]"
             }`}
           >
-            <span className={`absolute inset-y-0 left-0 w-1 ${selected ? "bg-coolant" : "bg-steel-200"}`} />
+            <span className={`absolute inset-y-0 left-0 w-1 ${selected ? "bg-coolant-400" : "bg-white/[0.1]"}`} />
             <div className="flex items-start justify-between gap-3">
               <div className="min-w-0">
-                <p className="truncate text-sm font-bold text-steel-900">{item.name}</p>
-                <p className="mt-1 flex items-center gap-1 text-xs text-steel-600">
+                <p className="truncate text-sm font-bold text-white">{item.name}</p>
+                <p className="mt-1 flex items-center gap-1 text-xs text-slate-400">
                   <MapPin size={13} />
                   {item.area}
                 </p>
               </div>
               <RiskBadge risk={health?.risk_level ?? item.status} />
             </div>
-            <div className="mt-3 flex items-center justify-between gap-3 rounded-md border border-steel-200/70 bg-steel-50/80 px-2.5 py-2 text-xs text-steel-600 shadow-insetline">
+            <div className="mt-3 flex items-center justify-between gap-3 rounded-md border border-white/[0.08] bg-white/[0.04] px-2.5 py-2 text-xs text-slate-400">
               <span className="flex min-w-0 items-center gap-1">
                 <Activity size={13} />
                 <span className="truncate">Priority {health?.priority_score ?? Math.round(item.criticality * 100)}</span>

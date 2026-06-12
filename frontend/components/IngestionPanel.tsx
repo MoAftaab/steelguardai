@@ -178,12 +178,12 @@ export function IngestionPanel({ equipment, selectedId, busy, onSelectEquipment,
 
   return (
     <section className="panel overflow-hidden">
-      <div className="border-b border-steel-100 bg-white p-5">
+      <div className="border-b border-white/[0.06] p-5">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
             <p className="kicker">Ingestion</p>
-            <h2 className="mt-1 flex items-center gap-2 text-base font-bold text-steel-950">
-              <UploadCloud size={18} className="text-coolant-700" />
+            <h2 className="mt-1 flex items-center gap-2 text-base font-bold text-white">
+              <UploadCloud size={18} className="text-coolant-400" />
               Add plant context
             </h2>
           </div>
@@ -210,10 +210,10 @@ export function IngestionPanel({ equipment, selectedId, busy, onSelectEquipment,
                 key={item.id}
                 type="button"
                 onClick={() => setMode(item.id)}
-                className={`focus-ring inline-flex h-9 items-center justify-center gap-1.5 rounded-md border text-xs font-bold transition ${
+                className={`focus-ring inline-flex h-9 items-center justify-center gap-1.5 rounded-md border text-xs font-bold transition-all duration-300 ${
                   active
-                    ? "border-coolant-200 bg-coolant-50 text-coolant-800 shadow-insetline"
-                    : "border-steel-200 bg-white text-steel-600 shadow-sm hover:border-coolant-200 hover:bg-coolant-50/50"
+                    ? "border-coolant-500/30 bg-coolant-500/10 text-coolant-400 shadow-[0_0_12px_rgba(20,184,166,0.1)]"
+                    : "border-white/[0.08] bg-white/[0.04] text-slate-400 hover:border-coolant-500/20 hover:bg-coolant-500/5 hover:text-coolant-400"
                 }`}
               >
                 <Icon size={14} />
@@ -225,14 +225,14 @@ export function IngestionPanel({ equipment, selectedId, busy, onSelectEquipment,
       </div>
 
       <form onSubmit={submit} className="space-y-3 p-5">
-        <p className="rounded-md border border-coolant-100 bg-coolant-50/60 px-3 py-2 text-xs font-semibold leading-5 text-coolant-900">
+        <p className="rounded-md border border-coolant-500/20 bg-coolant-500/[0.08] px-3 py-2 text-xs font-semibold leading-5 text-coolant-300">
           Saves into {currentMode.target}. After submit, the selected asset, recommendation, alerts, and evidence refresh.
         </p>
 
         {mode === "document" && (
           <>
             <div className="grid gap-3 sm:grid-cols-2">
-              <label className="space-y-1.5 text-xs font-bold uppercase tracking-wide text-steel-500">
+              <label className="space-y-1.5 text-xs font-bold uppercase tracking-wide text-slate-500">
                 Source
                 <select
                   value={sourceType}
@@ -307,25 +307,25 @@ export function IngestionPanel({ equipment, selectedId, busy, onSelectEquipment,
               <NumberField label="Lead time days" value={spareLeadTime} onChange={setSpareLeadTime} />
             </div>
             <Field label="Supplier" value={spareSupplier} onChange={setSpareSupplier} />
-            <label className="flex items-center gap-2 text-sm font-semibold text-steel-700">
+            <label className="flex items-center gap-2 text-sm font-semibold text-slate-300">
               <input
                 type="checkbox"
                 checked={spareCritical}
                 onChange={(event) => setSpareCritical(event.target.checked)}
-                className="h-4 w-4 rounded border-steel-300 text-coolant-700 focus:ring-coolant-600"
+                className="h-4 w-4 rounded border-white/[0.15] bg-white/[0.05] text-coolant-500 focus:ring-coolant-500"
               />
               Critical spare
             </label>
           </>
         )}
 
-        {lastUpdate && <p className="rounded-md border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm font-semibold text-emerald-700">{lastUpdate}</p>}
-        {error && <p className="rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm font-semibold text-red-700">{error}</p>}
+        {lastUpdate && <p className="rounded-md border border-emerald-500/30 bg-emerald-500/10 px-3 py-2 text-sm font-semibold text-emerald-400">{lastUpdate}</p>}
+        {error && <p className="rounded-md border border-red-500/30 bg-red-500/10 px-3 py-2 text-sm font-semibold text-red-400">{error}</p>}
 
         <button
           type="submit"
           disabled={busy || !selectedEquipment}
-          className="focus-ring inline-flex h-10 w-full items-center justify-center gap-2 rounded-md bg-steel-950 text-sm font-bold text-white shadow-sm transition hover:bg-steel-800 disabled:opacity-60"
+          className="focus-ring inline-flex h-10 w-full items-center justify-center gap-2 rounded-md bg-white text-sm font-bold text-slate-900 shadow-sm transition-all duration-300 hover:bg-slate-100 hover:shadow-lg disabled:opacity-60"
         >
           {busy ? <Loader2 size={16} className="animate-spin" /> : <UploadCloud size={16} />}
           Ingest {currentMode.label}
@@ -337,7 +337,7 @@ export function IngestionPanel({ equipment, selectedId, busy, onSelectEquipment,
 
 function Field({ label, value, onChange }: { label: string; value: string; onChange: (value: string) => void }) {
   return (
-    <label className="space-y-1.5 text-xs font-bold uppercase tracking-wide text-steel-500">
+    <label className="space-y-1.5 text-xs font-bold uppercase tracking-wide text-slate-500">
       {label}
       <input
         value={value}
@@ -350,7 +350,7 @@ function Field({ label, value, onChange }: { label: string; value: string; onCha
 
 function NumberField({ label, value, onChange }: { label: string; value: number; onChange: (value: number) => void }) {
   return (
-    <label className="space-y-1.5 text-xs font-bold uppercase tracking-wide text-steel-500">
+    <label className="space-y-1.5 text-xs font-bold uppercase tracking-wide text-slate-500">
       {label}
       <input
         type="number"
@@ -365,7 +365,7 @@ function NumberField({ label, value, onChange }: { label: string; value: number;
 
 function SeveritySelect({ value, onChange }: { value: RiskLevel; onChange: (value: RiskLevel) => void }) {
   return (
-    <label className="space-y-1.5 text-xs font-bold uppercase tracking-wide text-steel-500">
+    <label className="space-y-1.5 text-xs font-bold uppercase tracking-wide text-slate-500">
       Severity
       <select
         value={value}
@@ -395,7 +395,7 @@ function TextArea({
   monospace?: boolean;
 }) {
   return (
-    <label className="space-y-1.5 text-xs font-bold uppercase tracking-wide text-steel-500">
+    <label className="space-y-1.5 text-xs font-bold uppercase tracking-wide text-slate-500">
       {label}
       <textarea
         value={value}
