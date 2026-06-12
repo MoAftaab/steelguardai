@@ -45,38 +45,31 @@
 ## ✨ Features
 
 ### 🔬 AI-Powered Diagnostics
-- **Real-Time Anomaly Detection** — Weighted, multi-signal anomaly scoring engine that detects deviations from historical baselines across temperature, vibration, current, torque, pressure, flow, and oil contamination.
-- **ML Failure Classification** — Dual-model ensemble (ExtraTreesClassifier + RandomForestClassifier) automatically selects the best model at training time. Predicts binary failure probability and multi-class failure mode (Heat Dissipation, Power, Overstrain, Tool Wear, Random).
-- **Remaining Useful Life (RUL)** — Degradation-index-based RUL estimation combining anomaly score, equipment criticality, and delay severity into an estimated time-to-failure window (in hours).
-- **Steel Process Defect Rules** — Domain-specific heuristic rules for detecting thermal-vibration cascades, rolling load overstrain, cooling flow restriction, cavitation risk, oil contamination ingress, and gear wear progression.
+- **Real-Time Anomalies** — Weighted multi-signal anomaly scoring across temperature, vibration, current, torque, and flow.
+- **Ensemble ML Classifier** — Dual-model auto-selection (ExtraTrees vs. RandomForest) to predict failure probability and failure mode.
+- **Remaining Useful Life (RUL)** — Dynamic hours-to-failure calculations based on degradation indices and asset criticality.
+- **Domain Heuristics** — Expert rule engine for thermal cascades, overstrain, cavitation, and gear wear.
 
-### 🤖 Intelligent Reasoning Engine
-- **Retrieval-Augmented Generation (RAG)** — Ingests and indexes SOPs, manuals, failure reports, incident records, delay logs, abnormality alerts, spare part availability, and engineer feedback. Retrieves semantically relevant context using OpenAI embeddings (`text-embedding-3-small`) or a local TF-IDF/hash-vector fallback for offline mode.
-- **Agentic Recommendation Pipeline** — Multi-node reasoning pipeline (Triage → Evidence Retrieval → ML Classifier → Process Defect Rules → Maintenance Planner → Report Generator) that produces structured, explainable maintenance recommendations.
-- **LLM Copilot Chat** — Multi-turn conversational interface powered by OpenAI's Responses API (`gpt-5.5`) with full conversation memory. Falls back to structured deterministic responses when no API key is available.
-- **Feedback-Learning Loop** — Engineers can accept, correct, or reject recommendations. Feedback is persisted and injected back into the RAG corpus to continuously improve future recommendations.
+### 🤖 Intelligent Reasoning
+- **Contextual RAG** — Cosine-similarity document retrieval (SOPs, manuals, logs, spares) with local hash-vector fallback.
+- **Agentic Pipeline** — Multi-node reasoning chain (Triage ➔ Retrieval ➔ ML Classifier ➔ Rules ➔ Planner ➔ Report).
+- **Interactive Copilot** — Multi-turn diagnostic chat with conversation history and context-aware responses.
+- **Feedback Loop** — Continuous learning loop that feeds user corrections back into the RAG corpus.
 
 ### 📊 Operations Dashboard
-- **Dark-Theme Glassmorphic UI** — Premium Next.js 15 dashboard with glassmorphic cards, glow shadows, pulse/shimmer/gradient animations, and responsive layout.
-- **Plant Summary View** — Real-time overview of equipment count, open/critical alerts, average RUL, and highest priority score.
-- **Equipment Health Detail** — Per-asset sensor metric tiles with color-coded status (low/medium/high/critical), interactive trend charts (Recharts), and ML failure probability trend line.
-- **Recommendation Panel** — Full diagnostic breakdown with cited evidence, node trace pipeline visualization, actionable checklists, spare strategy, and escalation triggers.
-- **Report Generation** — One-click structured Markdown maintenance decision reports.
-- **Process Digital Twin** — Animated steel process visualization with real-time sensor overlays.
+- **Glassmorphic UI** — Premium, responsive dark-themed Next.js 15 interface with sleek micro-animations.
+- **Plant Digital Twin** — Animated steel manufacturing flow diagram with live sensor telemetry overlays.
+- **Interactive Trends** — Real-time sensor trend charts, alert lists, and ML failure probability logs.
+- **Actionable Checklists** — Root-cause analysis, step-by-step disassembly guides, and spare parts availability.
 
-### 🔔 Role-Based Notifications
-- **Maintenance Engineer** — Actionable diagnostics, disassembly steps, and sensor trend alerts.
-- **Operations Supervisor** — Production downtime estimates, delay logs, and escalation protocols.
-- **Stores/Procurement Planner** — Lead times, stock alerts, vendor order signals, and spare pressure warnings.
+### 🔔 Role-Based Alerts
+- **Maintenance Engineers** — Technical diagnostic breakdowns, disassembly checklists, and sensor thresholds.
+- **Operations Supervisors** — Production downtime estimates, delay records, and escalation triggers.
+- **Procurement Planners** — Lead times, inventory status, spare part pressure levels, and vendor orders.
 
-### 📥 Comprehensive Data Ingestion
-- **Documents** — SOPs, manuals, failure reports, incident records, and breakdown summaries.
-- **Sensor Telemetry** — Batch sensor reading ingestion with equipment validation.
-- **Fault Events** — Control-system fault codes that auto-generate RAG documents and alerts.
-- **Alerts** — Manual or automated abnormality alerts with severity-based routing.
-- **Spare Parts** — Real-time inventory updates with stock/lead-time tracking.
-- **Maintenance Logs** — Historical breakdown records with root cause and action taken.
-- **Live Stream Simulation** — UCI AI4I dataset streaming with configurable tick-based advancement.
+### 📥 Data Ingestion Hub
+- **Multi-Source Ingestion** — Telemetry streams, SOPs, control-system fault codes, and spare parts inventory.
+- **Live Stream Simulation** — Interactive step-by-step simulation using the UCI AI4I 2020 dataset.
 
 ---
 
