@@ -414,7 +414,28 @@ Additional urgency escalation: if RUL ≤ 72 hours → `shutdown_window`; if RUL
 
 ## 7. Installation, Configuration, and Setup
 
-Choose one of the three methods below to run SteelGuard AI.
+### 📝 Environment Variable Configuration
+Before running the application (with or without Docker), you must create and configure your `.env` file:
+
+1. **Create the `.env` file**:
+   ```bash
+   cp .env.example .env
+   ```
+
+2. **Configure your variables**:
+   Open `.env` in a text editor and configure the following parameters. Be sure to replace `YOUR_OPENAI_API_KEY` with your actual key:
+   ```env
+   OPENAI_API_KEY=YOUR_OPENAI_API_KEY
+   OPENAI_MODEL=gpt-5.4
+   NEXT_PUBLIC_API_URL=http://localhost:8000
+   DATABASE_URL=postgresql://steelguard:steelguard@postgres:5432/steelguard
+   QDRANT_URL=http://qdrant:6333
+
+   STEELGUARD_RAG_MODE=openai
+   OPENAI_EMBEDDING_MODEL=text-embedding-3-small
+   ```
+
+Once you have configured your environment variables, choose one of the three methods below to run the application.
 
 ---
 
