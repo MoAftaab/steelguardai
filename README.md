@@ -414,139 +414,95 @@ Additional urgency escalation: if RUL ≤ 72 hours → `shutdown_window`; if RUL
 
 ## 7. Installation, Configuration, and Setup
 
-### ⚡ Quick Start with Docker (Recommended & Easiest)
+Choose one of the three methods below to run SteelGuard AI.
 
-To run the entire system (FastAPI backend, Next.js frontend, PostgreSQL, and Qdrant vector database) in one step:
+---
 
-1. **Create Environment File**:
-   Copy `.env.example` to `.env`:
+### Method 1: Instant Run (Pre-built Docker Images) ⚡
+Use this to run the application immediately **without downloading the codebase or building from source**.
+
+1. **Download the configuration**: Save the [docker-compose.prod.yml](docker-compose.prod.yml) and `.env.example` files to a folder on your computer.
+2. **Create environment file**:
    ```bash
    cp .env.example .env
    ```
    *(Optional: Open `.env` and configure your `OPENAI_API_KEY` to enable AI Copilot features).*
-
-2. **Run Docker Compose**:
+3. **Run the application**:
    ```bash
-   docker compose up --build
+   docker compose -f docker-compose.prod.yml up -d
    ```
-
-3. **Open in Browser**:
-   Navigate to **[http://localhost:3000](http://localhost:3000)**.
+4. **Access the dashboard**: Open **[http://localhost:3000](http://localhost:3000)** in your browser.
 
 ---
 
-### Prerequisites
+### Method 2: Local Docker Development (Build from Source) 🐳
+Use this if you have cloned the repository and want to run it inside containerized environments using Docker.
 
-| Requirement | Minimum Version | Purpose |
-|------------|----------------|---------|
-| **Python** | 3.10+ | Backend API and ML model |
-| **Node.js** | 18.x+ | Frontend dashboard (with `npm`) |
-| **Docker** *(Optional)* | 20.x+ | Required only for PostgreSQL + Qdrant services |
-| **OpenAI API Key** *(Optional)* | — | Required for LLM copilot and semantic RAG (system works without it via fallback modes) |
-
----
-
-### Option A: Running Locally (Recommended for Development)
-
-#### Step 1: Clone the Repository
-```bash
-git clone https://github.com/MoAftaab/steelguardai.git
-cd steelguard-ai
-```
-
-#### Step 2: Configure Environment Variables
-```bash
-# Copy the template
-cp .env.example .env
-```
-
-Open `.env` and configure:
-```env
-# Required for LLM features (optional — system works without it)
-OPENAI_API_KEY=your-openai-api-key-here
-
-# Optional — defaults are sensible
-OPENAI_MODEL=gpt-5.5
-OPENAI_EMBEDDING_MODEL=text-embedding-3-small
-STEELGUARD_RAG_MODE=openai        # Set to "local" for offline mode
-NEXT_PUBLIC_API_URL=http://localhost:8000
-```
-
-#### Step 3: Start the Backend API
-```bash
-cd backend
-
-# Create and activate virtual environment
-python -m venv .venv
-
-# Windows PowerShell:
-.\.venv\Scripts\Activate.ps1
-
-# macOS / Linux:
-source .venv/bin/activate
-
-# Install dependencies
-pip install -r requirements.txt
-
-# (Optional) Download/verify the UCI AI4I dataset
-python scripts/prepare_data.py
-
-# Start the API server
-python -m uvicorn app.main:app --reload --port 8000
-```
-
-The backend will automatically:
-- Download the UCI AI4I 2020 dataset if not present
-- Train the ML model and cache it as `artifacts/ai4i_failure_model.joblib`
-- Load equipment config, manuals, logs, spares, and feedback
-- Initialize the telemetry stream with historical readings
-
-#### Step 4: Start the Frontend Dashboard
-```bash
-# Open a new terminal
-cd frontend
-
-# Install dependencies
-npm install
-
-# Start the development server
-npm run dev
-```
-
-#### Step 5: Open the Dashboard
-Navigate to **[http://localhost:3000](http://localhost:3000)** in your browser.
-
----
-
-### Option B: Running with Docker Compose (Full Stack)
-
-To run the complete stack including PostgreSQL and Qdrant:
-
-1. **Configure Environment Variables**:
-   Copy `.env.example` to `.env` and configure your settings (e.g., `OPENAI_API_KEY`):
+1. **Create environment file**:
    ```bash
    cp .env.example .env
    ```
-
-2. **Start the Containers**:
+   *(Optional: Open `.env` and configure your `OPENAI_API_KEY`).*
+2. **Build and start the containers**:
    ```bash
    docker compose up --build
    ```
-
-This starts all four services:
-
-| Service | URL | Description |
-|---------|-----|-------------|
-| **FastAPI Backend** | `http://localhost:8000` | REST API + ML inference |
-| **Next.js Frontend** | `http://localhost:3000` | Operations dashboard |
-| **PostgreSQL** | `localhost:5432` | Relational database |
-| **Qdrant** | `localhost:6333` | Vector database for RAG |
+3. **Access the dashboard**: Open **[http://localhost:3000](http://localhost:3000)**.
 
 > [!TIP]
-> If you encounter database initialization errors or corrupt volume states (e.g., `pg_control` not found), reset the Docker volumes using:
+> If you encounter database volume errors or corrupt database states (e.g., `pg_control` not found), reset the volumes using:
 > ```bash
 > docker compose down -v
 > ```
+
+---
+
+### Method 3: Native Local Installation (Without Docker) 🛠️
+Recommended for direct code modification, active debugging, and running tests.
+
+#### Prerequisites
+* **Python**: 3.10+
+* **Node.js**: 18.x+
+
+#### Step 1: Start the Backend API
+1. Navigate to the backend folder:
+   ```bash
+   cd backend
+   ```
+2. Create and activate a virtual environment:
+   * **Windows (PowerShell)**:
+     ```powershell
+     python -m venv .venv
+     .\.venv\Scripts\Activate.ps1
+     ```
+   * **macOS / Linux**:
+     ```bash
+     python -m venv .venv
+     source .venv/bin/activate
+     ```
+3. Install dependencies:
+   ```bash
+   pip install -r requirements.txt
+   ```
+4. Start the API server:
+   ```bash
+   python -m uvicorn app.main:app --reload --port 8000
+   ```
+
+#### Step 2: Start the Frontend Dashboard
+1. Open a new terminal and navigate to the frontend folder:
+   ```bash
+   cd frontend
+   ```
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+3. Start the development server:
+   ```bash
+   npm run dev
+   ```
+4. Open the application: Navigate to **[http://localhost:3000](http://localhost:3000)**.
 
 ---
 
