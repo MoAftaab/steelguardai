@@ -39,12 +39,12 @@ const formatNumber = (num: number): string => {
 };
 
 type FeatureTab = "diagnostics" | "copilot" | "recommendations" | "twin";
-type ArchTab = "system-flow" | "research-blueprint";
+type ArchTab = "system-architecture" | "system-flow" | "research-blueprint";
 
 export default function LandingPage() {
   const router = useRouter();
   const [activeFeature, setActiveFeature] = useState<FeatureTab>("diagnostics");
-  const [activeArch, setActiveArch] = useState<ArchTab>("system-flow");
+  const [activeArch, setActiveArch] = useState<ArchTab>("system-architecture");
   const [scrolled, setScrolled] = useState(false);
   const [isLaunching, setIsLaunching] = useState(false);
   const [launchProgress, setLaunchProgress] = useState(0);
@@ -987,6 +987,16 @@ export default function LandingPage() {
           {/* Toggle Switches */}
           <div className="inline-flex p-1 bg-slate-950 rounded-xl border border-slate-900 mt-6">
             <button
+              onClick={() => setActiveArch("system-architecture")}
+              className={`px-5 py-2 rounded-lg text-xs font-semibold tracking-wide transition-all duration-200 ${
+                activeArch === "system-architecture"
+                  ? "bg-slate-900 text-white border border-white/5 shadow-subtle"
+                  : "text-slate-400 hover:text-slate-200"
+              }`}
+            >
+              System Architecture
+            </button>
+            <button
               onClick={() => setActiveArch("system-flow")}
               className={`px-5 py-2 rounded-lg text-xs font-semibold tracking-wide transition-all duration-200 ${
                 activeArch === "system-flow"
@@ -1013,7 +1023,28 @@ export default function LandingPage() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center max-w-5xl mx-auto">
           {/* Blueprint Description */}
           <div className="lg:col-span-4 space-y-5">
-            {activeArch === "system-flow" ? (
+            {activeArch === "system-architecture" ? (
+              <>
+                <h3 className="text-lg font-bold text-white">System Architecture</h3>
+                <p className="text-xs text-slate-400 leading-relaxed">
+                  Infographic outlining the platform's multi-layered tech stack, demonstrating decoupling and component integrations.
+                </p>
+                <ul className="space-y-3 text-xs text-slate-300">
+                  <li className="flex items-start gap-2">
+                    <CheckCircle2 className="w-4 h-4 text-coolant-400 shrink-0 mt-0.5" />
+                    <span><b>Frontend Interface:</b> Next.js 15 app with real-time HUD and chat.</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle2 className="w-4 h-4 text-coolant-400 shrink-0 mt-0.5" />
+                    <span><b>Backend Core:</b> FastAPI orchestration for RAG and scoring.</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle2 className="w-4 h-4 text-coolant-400 shrink-0 mt-0.5" />
+                    <span><b>Decoupled ML:</b> Model predicting failure mode and RUL.</span>
+                  </li>
+                </ul>
+              </>
+            ) : activeArch === "system-flow" ? (
               <>
                 <h3 className="text-lg font-bold text-white">System Data Flow</h3>
                 <p className="text-xs text-slate-400 leading-relaxed">
@@ -1072,7 +1103,13 @@ export default function LandingPage() {
             <div className="bg-[hsl(228,22%,5%)] rounded-[10px] overflow-hidden">
               <div className="relative w-full flex justify-center bg-slate-950/90 rounded-lg p-4">
                 <img
-                  src={activeArch === "system-flow" ? "/data_flow_diagram.png" : "/research_architecture.png"}
+                  src={
+                    activeArch === "system-architecture"
+                      ? "/architecture_diagram.png"
+                      : activeArch === "system-flow"
+                      ? "/data_flow_diagram.png"
+                      : "/research_architecture.png"
+                  }
                   alt="Architecture Diagram"
                   className="max-h-[420px] w-auto max-w-full object-contain rounded"
                 />
