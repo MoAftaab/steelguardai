@@ -414,6 +414,27 @@ Additional urgency escalation: if RUL ≤ 72 hours → `shutdown_window`; if RUL
 
 ## 7. Installation, Configuration, and Setup
 
+### ⚡ Quick Start with Docker (Recommended & Easiest)
+
+To run the entire system (FastAPI backend, Next.js frontend, PostgreSQL, and Qdrant vector database) in one step:
+
+1. **Create Environment File**:
+   Copy `.env.example` to `.env`:
+   ```bash
+   cp .env.example .env
+   ```
+   *(Optional: Open `.env` and configure your `OPENAI_API_KEY` to enable AI Copilot features).*
+
+2. **Run Docker Compose**:
+   ```bash
+   docker compose up --build
+   ```
+
+3. **Open in Browser**:
+   Navigate to **[http://localhost:3000](http://localhost:3000)**.
+
+---
+
 ### Prerequisites
 
 | Requirement | Minimum Version | Purpose |
@@ -501,9 +522,16 @@ Navigate to **[http://localhost:3000](http://localhost:3000)** in your browser.
 
 To run the complete stack including PostgreSQL and Qdrant:
 
-```bash
-docker compose up --build
-```
+1. **Configure Environment Variables**:
+   Copy `.env.example` to `.env` and configure your settings (e.g., `OPENAI_API_KEY`):
+   ```bash
+   cp .env.example .env
+   ```
+
+2. **Start the Containers**:
+   ```bash
+   docker compose up --build
+   ```
 
 This starts all four services:
 
@@ -513,6 +541,12 @@ This starts all four services:
 | **Next.js Frontend** | `http://localhost:3000` | Operations dashboard |
 | **PostgreSQL** | `localhost:5432` | Relational database |
 | **Qdrant** | `localhost:6333` | Vector database for RAG |
+
+> [!TIP]
+> If you encounter database initialization errors or corrupt volume states (e.g., `pg_control` not found), reset the Docker volumes using:
+> ```bash
+> docker compose down -v
+> ```
 
 ---
 

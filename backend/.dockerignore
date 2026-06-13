@@ -1,0 +1,15 @@
+.venv
+venv
+ENV
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.env
+.git
+.dockerignore
+api.log
+api.err.log
+data/db.sqlite3
+qdrant_storage/
+postgres_data/
