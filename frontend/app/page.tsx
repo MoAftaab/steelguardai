@@ -34,6 +34,9 @@ import {
 import { api } from "@/lib/api";
 import SparksCanvas from "@/components/SparksCanvas";
 
+const formatNumber = (num: number): string => {
+  return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+};
 
 type FeatureTab = "diagnostics" | "copilot" | "recommendations" | "twin";
 type ArchTab = "system-flow" | "research-blueprint";
@@ -543,7 +546,7 @@ export default function LandingPage() {
             </div>
             <div className="border-l border-slate-800/60 pl-4">
               <span className="text-[9px] font-bold uppercase text-slate-500 tracking-wider font-mono">Logs Ingested</span>
-              <p className="text-sm font-extrabold text-white mt-0.5 font-mono">{apiHealth.rowsLoaded.toLocaleString()}</p>
+              <p className="text-sm font-extrabold text-white mt-0.5 font-mono">{formatNumber(apiHealth.rowsLoaded)}</p>
             </div>
             <div className="border-l border-slate-800/60 pl-4">
               <span className="text-[9px] font-bold uppercase text-slate-500 tracking-wider font-mono">Active Classifier</span>
@@ -1123,7 +1126,7 @@ export default function LandingPage() {
               <div>
                 <div className="flex justify-between text-xs font-mono mb-1.5">
                   <span className="text-slate-400">Hourly Downtime Cost</span>
-                  <span className="text-white font-bold">${roiDowntimeCost.toLocaleString()}/hr</span>
+                  <span className="text-white font-bold">${formatNumber(roiDowntimeCost)}/hr</span>
                 </div>
                 <input
                   type="range"
@@ -1166,12 +1169,12 @@ export default function LandingPage() {
               <div className="grid grid-cols-2 gap-4 mb-6">
                 <div className="bg-slate-950/60 p-4 rounded-xl border border-slate-900">
                   <span className="text-[9px] font-bold text-slate-500 uppercase tracking-wider block">Standard Loss</span>
-                  <span className="text-lg font-bold text-slate-400 mt-1 block font-mono">${roiMetrics.baselineCost.toLocaleString()}</span>
+                  <span className="text-lg font-bold text-slate-400 mt-1 block font-mono">${formatNumber(roiMetrics.baselineCost)}</span>
                   <span className="text-[9px] text-slate-600 block mt-1">4.0 hrs avg. resolution</span>
                 </div>
                 <div className="bg-slate-950/60 p-4 rounded-xl border border-slate-900">
                   <span className="text-[9px] font-bold text-coolant-400 uppercase tracking-wider block">SteelGuard Loss</span>
-                  <span className="text-lg font-bold text-white mt-1 block font-mono">${roiMetrics.optimizedCost.toLocaleString()}</span>
+                  <span className="text-lg font-bold text-white mt-1 block font-mono">${formatNumber(roiMetrics.optimizedCost)}</span>
                   <span className="text-[9px] text-coolant-500/80 block mt-1">85% prevented, 1.0 hr resolution</span>
                 </div>
               </div>
@@ -1180,10 +1183,10 @@ export default function LandingPage() {
                 <div className="absolute top-0 right-0 w-32 h-32 bg-coolant-500/5 rounded-full blur-2xl" />
                 <span className="text-[10px] font-bold text-coolant-400 uppercase tracking-widest">Estimated Annual Savings</span>
                 <span className="text-3xl font-extrabold text-white mt-2 block font-mono bg-gradient-to-r from-white via-slate-100 to-coolant-300 bg-clip-text text-transparent">
-                  ${roiMetrics.netSavings.toLocaleString()}
+                  ${formatNumber(roiMetrics.netSavings)}
                 </span>
                 <p className="text-[10px] text-slate-500 font-mono mt-1">
-                  Net savings after deducting SteelGuard AI software licensing cost (${roiMetrics.licenceCost.toLocaleString()}/yr)
+                  Net savings after deducting SteelGuard AI software licensing cost (${formatNumber(roiMetrics.licenceCost)}/yr)
                 </p>
               </div>
             </div>
