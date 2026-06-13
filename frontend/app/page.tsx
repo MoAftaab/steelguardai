@@ -46,6 +46,11 @@ export default function LandingPage() {
   const [activeFeature, setActiveFeature] = useState<FeatureTab>("diagnostics");
   const [activeArch, setActiveArch] = useState<ArchTab>("system-architecture");
   const [scrolled, setScrolled] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
   const [isLaunching, setIsLaunching] = useState(false);
   const [launchProgress, setLaunchProgress] = useState(0);
   const [loadingStatus, setLoadingStatus] = useState("Initializing console...");
@@ -986,36 +991,42 @@ export default function LandingPage() {
 
           {/* Toggle Switches */}
           <div className="inline-flex p-1 bg-slate-950 rounded-xl border border-slate-900 mt-6">
-            <button
-              onClick={() => setActiveArch("system-architecture")}
-              className={`px-5 py-2 rounded-lg text-xs font-semibold tracking-wide transition-all duration-200 ${
-                activeArch === "system-architecture"
-                  ? "bg-slate-900 text-white border border-white/5 shadow-subtle"
-                  : "text-slate-400 hover:text-slate-200"
-              }`}
-            >
-              System Architecture
-            </button>
-            <button
-              onClick={() => setActiveArch("system-flow")}
-              className={`px-5 py-2 rounded-lg text-xs font-semibold tracking-wide transition-all duration-200 ${
-                activeArch === "system-flow"
-                  ? "bg-slate-900 text-white border border-white/5 shadow-subtle"
-                  : "text-slate-400 hover:text-slate-200"
-              }`}
-            >
-              System Data Flow
-            </button>
-            <button
-              onClick={() => setActiveArch("research-blueprint")}
-              className={`px-5 py-2 rounded-lg text-xs font-semibold tracking-wide transition-all duration-200 ${
-                activeArch === "research-blueprint"
-                  ? "bg-slate-900 text-white border border-white/5 shadow-subtle"
-                  : "text-slate-400 hover:text-slate-200"
-              }`}
-            >
-              Research Blueprint
-            </button>
+            {mounted ? (
+              <>
+                <button
+                  onClick={() => setActiveArch("system-architecture")}
+                  className={`px-5 py-2 rounded-lg text-xs font-semibold tracking-wide transition-all duration-200 ${
+                    activeArch === "system-architecture"
+                      ? "bg-slate-900 text-white border border-white/5 shadow-subtle"
+                      : "text-slate-400 hover:text-slate-200"
+                  }`}
+                >
+                  System Architecture
+                </button>
+                <button
+                  onClick={() => setActiveArch("system-flow")}
+                  className={`px-5 py-2 rounded-lg text-xs font-semibold tracking-wide transition-all duration-200 ${
+                    activeArch === "system-flow"
+                      ? "bg-slate-900 text-white border border-white/5 shadow-subtle"
+                      : "text-slate-400 hover:text-slate-200"
+                  }`}
+                >
+                  System Data Flow
+                </button>
+                <button
+                  onClick={() => setActiveArch("research-blueprint")}
+                  className={`px-5 py-2 rounded-lg text-xs font-semibold tracking-wide transition-all duration-200 ${
+                    activeArch === "research-blueprint"
+                      ? "bg-slate-900 text-white border border-white/5 shadow-subtle"
+                      : "text-slate-400 hover:text-slate-200"
+                  }`}
+                >
+                  Research Blueprint
+                </button>
+              </>
+            ) : (
+              <span className="px-5 py-2 text-xs font-semibold text-slate-500 font-mono">Loading Switches...</span>
+            )}
           </div>
         </div>
 
@@ -1023,69 +1034,73 @@ export default function LandingPage() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center max-w-5xl mx-auto">
           {/* Blueprint Description */}
           <div className="lg:col-span-4 space-y-5">
-            {activeArch === "system-architecture" ? (
-              <>
-                <h3 className="text-lg font-bold text-white">System Architecture</h3>
-                <p className="text-xs text-slate-400 leading-relaxed">
-                  Infographic outlining the platform's multi-layered tech stack, demonstrating decoupling and component integrations.
-                </p>
-                <ul className="space-y-3 text-xs text-slate-300">
-                  <li className="flex items-start gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-coolant-400 shrink-0 mt-0.5" />
-                    <span><b>Frontend Interface:</b> Next.js 15 app with real-time HUD and chat.</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-coolant-400 shrink-0 mt-0.5" />
-                    <span><b>Backend Core:</b> FastAPI orchestration for RAG and scoring.</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-coolant-400 shrink-0 mt-0.5" />
-                    <span><b>Decoupled ML:</b> Model predicting failure mode and RUL.</span>
-                  </li>
-                </ul>
-              </>
-            ) : activeArch === "system-flow" ? (
-              <>
-                <h3 className="text-lg font-bold text-white">System Data Flow</h3>
-                <p className="text-xs text-slate-400 leading-relaxed">
-                  Traces a telemetry signal's path from plant equipment logs into scoring, ML classification, and Expert Rule heuristics.
-                </p>
-                <ul className="space-y-3 text-xs text-slate-300">
-                  <li className="flex items-start gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-coolant-400 shrink-0 mt-0.5" />
-                    <span><b>Telemetry Mapping:</b> Maps raw UCI parameters to assets.</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-coolant-400 shrink-0 mt-0.5" />
-                    <span><b>Parallel Scorers:</b> Parallel ML, anomaly, and rule outputs.</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-coolant-400 shrink-0 mt-0.5" />
-                    <span><b>Vector Corpus:</b> Embeds manuals to supplement logic.</span>
-                  </li>
-                </ul>
-              </>
+            {mounted ? (
+              activeArch === "system-architecture" ? (
+                <>
+                  <h3 className="text-lg font-bold text-white">System Architecture</h3>
+                  <p className="text-xs text-slate-400 leading-relaxed">
+                    Infographic outlining the platform's multi-layered tech stack, demonstrating decoupling and component integrations.
+                  </p>
+                  <ul className="space-y-3 text-xs text-slate-300">
+                    <li className="flex items-start gap-2">
+                      <CheckCircle2 className="w-4 h-4 text-coolant-400 shrink-0 mt-0.5" />
+                      <span><b>Frontend Interface:</b> Next.js 15 app with real-time HUD and chat.</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <CheckCircle2 className="w-4 h-4 text-coolant-400 shrink-0 mt-0.5" />
+                      <span><b>Backend Core:</b> FastAPI orchestration for RAG and scoring.</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <CheckCircle2 className="w-4 h-4 text-coolant-400 shrink-0 mt-0.5" />
+                      <span><b>Decoupled ML:</b> Model predicting failure mode and RUL.</span>
+                    </li>
+                  </ul>
+                </>
+              ) : activeArch === "system-flow" ? (
+                <>
+                  <h3 className="text-lg font-bold text-white">System Data Flow</h3>
+                  <p className="text-xs text-slate-400 leading-relaxed">
+                    Traces a telemetry signal's path from plant equipment logs into scoring, ML classification, and Expert Rule heuristics.
+                  </p>
+                  <ul className="space-y-3 text-xs text-slate-300">
+                    <li className="flex items-start gap-2">
+                      <CheckCircle2 className="w-4 h-4 text-coolant-400 shrink-0 mt-0.5" />
+                      <span><b>Telemetry Mapping:</b> Maps raw UCI parameters to assets.</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <CheckCircle2 className="w-4 h-4 text-coolant-400 shrink-0 mt-0.5" />
+                      <span><b>Parallel Scorers:</b> Parallel ML, anomaly, and rule outputs.</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <CheckCircle2 className="w-4 h-4 text-coolant-400 shrink-0 mt-0.5" />
+                      <span><b>Vector Corpus:</b> Embeds manuals to supplement logic.</span>
+                    </li>
+                  </ul>
+                </>
+              ) : (
+                <>
+                  <h3 className="text-lg font-bold text-white">Research Blueprint</h3>
+                  <p className="text-xs text-slate-400 leading-relaxed">
+                    An academic-level blueprint mapping multi-modal document vectors, cosine similarity logic, and automated threshold optimization.
+                  </p>
+                  <ul className="space-y-3 text-xs text-slate-300">
+                    <li className="flex items-start gap-2">
+                      <CheckCircle2 className="w-4 h-4 text-purple-400 shrink-0 mt-0.5" />
+                      <span><b>Threshold Optimizers:</b> scans 65 thresholds dynamically.</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <CheckCircle2 className="w-4 h-4 text-purple-400 shrink-0 mt-0.5" />
+                      <span><b>Cosine Similarity:</b> enforces document category variation.</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <CheckCircle2 className="w-4 h-4 text-purple-400 shrink-0 mt-0.5" />
+                      <span><b>Offline Local Vectors:</b> runs local 256d hash arrays as fallback.</span>
+                    </li>
+                  </ul>
+                </>
+              )
             ) : (
-              <>
-                <h3 className="text-lg font-bold text-white">Research Blueprint</h3>
-                <p className="text-xs text-slate-400 leading-relaxed">
-                  An academic-level blueprint mapping multi-modal document vectors, cosine similarity logic, and automated threshold optimization.
-                </p>
-                <ul className="space-y-3 text-xs text-slate-300">
-                  <li className="flex items-start gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-purple-400 shrink-0 mt-0.5" />
-                    <span><b>Threshold Optimizers:</b> scans 65 thresholds dynamically.</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-purple-400 shrink-0 mt-0.5" />
-                    <span><b>Cosine Similarity:</b> enforces document category variation.</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-purple-400 shrink-0 mt-0.5" />
-                    <span><b>Offline Local Vectors:</b> runs local 256d hash arrays as fallback.</span>
-                  </li>
-                </ul>
-              </>
+              <div className="text-xs text-slate-500 font-mono">Loading descriptions...</div>
             )}
             <div className="pt-2">
               <Link
@@ -1102,17 +1117,21 @@ export default function LandingPage() {
           <div className="lg:col-span-8 bg-gradient-to-r from-coolant-500 via-purple-600 to-forge-500 bg-[length:200%_auto] animate-gradient-shift rounded-xl p-[1.5px] shadow-lifted backdrop-blur-sm w-full overflow-hidden transition-all duration-500 hover:scale-[1.02] hover:shadow-neon-teal">
             <div className="bg-[hsl(228,22%,5%)] rounded-[10px] overflow-hidden">
               <div className="relative w-full flex justify-center bg-slate-950/90 rounded-lg p-4">
-                <img
-                  src={
-                    activeArch === "system-architecture"
-                      ? "/architecture_diagram.png"
-                      : activeArch === "system-flow"
-                      ? "/data_flow_diagram.png"
-                      : "/research_architecture.png"
-                  }
-                  alt="Architecture Diagram"
-                  className="max-h-[420px] w-auto max-w-full object-contain rounded"
-                />
+                {mounted ? (
+                  <img
+                    src={
+                      activeArch === "system-architecture"
+                        ? "/architecture_diagram.png"
+                        : activeArch === "system-flow"
+                        ? "/data_flow_diagram.png"
+                        : "/research_architecture.png"
+                    }
+                    alt="Architecture Diagram"
+                    className="max-h-[420px] w-auto max-w-full object-contain rounded"
+                  />
+                ) : (
+                  <div className="h-[320px] flex items-center justify-center text-xs font-mono text-slate-500">Loading Blueprint Diagram...</div>
+                )}
               </div>
             </div>
           </div>
