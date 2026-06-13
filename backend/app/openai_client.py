@@ -142,7 +142,7 @@ def generate_copilot_reply(message: str, recommendation: Recommendation, convers
             "Backend context JSON:\n"
             f"{json.dumps(context, default=str)}"
         ),
-        "max_output_tokens": 520,
+        "max_output_tokens": 3000,
     }
 
     try:
@@ -269,7 +269,7 @@ def generate_diagnosis_and_actions(
             "}"
         ),
         "input": json.dumps(context, default=str),
-        "max_output_tokens": 700,
+        "max_output_tokens": 4096,
     }
 
     try:
