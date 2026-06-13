@@ -1,7 +1,7 @@
 "use client";
 
 import type { ComponentType, ReactNode } from "react";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   Activity,
   AlertOctagon,
@@ -39,8 +39,10 @@ import { EquipmentList } from "@/components/EquipmentList";
 import { HealthChart } from "@/components/HealthChart";
 import { IngestionPanel } from "@/components/IngestionPanel";
 import { MetricTile } from "@/components/MetricTile";
+import { SensorMetricsPanel } from "@/components/SensorMetricsPanel";
 import { ProcessTwin } from "@/components/ProcessTwin";
 import { PredictiveInsights } from "@/components/PredictiveInsights";
+import { MaintenanceTimeline } from "@/components/MaintenanceTimeline";
 import { RecommendationPanel } from "@/components/RecommendationPanel";
 import { ReportPanel } from "@/components/ReportPanel";
 import { RiskBadge } from "@/components/RiskBadge";
@@ -159,6 +161,7 @@ export default function Home() {
   const [live, setLive] = useState(true);
   const [apiStatus, setApiStatus] = useState<ApiStatus>("checking");
   const [activeSection, setActiveSection] = useState("dashboard");
+  const [theme, setTheme] = useState<"violet" | "amber" | "cyan">("violet");
   const [openaiEnabled, setOpenaiEnabled] = useState(false);
   const [ragProvider, setRagProvider] = useState("checking");
   const [mlModelLabel, setMlModelLabel] = useState("checking");
@@ -171,6 +174,10 @@ export default function Home() {
   const [initialLoading, setInitialLoading] = useState(true);
   const [hydrationProgress, setHydrationProgress] = useState(0);
   const [hydrationStatus, setHydrationStatus] = useState("Initializing database handshake...");
+  /** True while the user is interacting with Accept / Correct / Reject. Pauses the live stream. */
+  const feedbackLockedRef = useRef(false);
+  const lockFeedback = useCallback(() => { feedbackLockedRef.current = true; }, []);
+  const unlockFeedback = useCallback(() => { feedbackLockedRef.current = false; }, []);
 
   useEffect(() => {
     void loadDashboard();
@@ -184,6 +191,8 @@ export default function Home() {
   useEffect(() => {
     if (!live) return;
     const timer = window.setInterval(() => {
+      // Skip auto-tick while user is submitting feedback or filling the correction/rejection form
+      if (feedbackLockedRef.current) return;
       void advanceStream();
     }, 6000);
     return () => window.clearInterval(timer);
@@ -381,7 +390,8 @@ export default function Home() {
       setNotifications(notificationPayload);
       setNotificationsUpdatedAt(new Date().toISOString());
       setHealthMap((items) => ({ ...items, ...Object.fromEntries(healthEntries) }));
-      if (selectedId) {
+      // Only regenerate the recommendation if the user is NOT in the middle of feedback
+      if (selectedId && !feedbackLockedRef.current) {
         const selectedAlertAfterTick = alertPayload.find((item) => item.equipment_id === selectedId);
         const nextRecommendation = await api.recommendation(selectedId, selectedAlertAfterTick?.id);
         setRecommendation(nextRecommendation);
@@ -430,7 +440,6 @@ export default function Home() {
 
   async function recordFeedback(payload: FeedbackPayload) {
     if (!recommendation || !selectedId) return;
-    setBusy(true);
     setError(null);
     try {
       await api.feedback(payload);
@@ -445,8 +454,6 @@ export default function Home() {
       setApiStatus("offline");
       setError(caught instanceof Error ? caught.message : "Unable to record feedback.");
       throw caught;
-    } finally {
-      setBusy(false);
     }
   }
 
@@ -569,14 +576,14 @@ export default function Home() {
   }
 
   return (
-    <main className="relative min-h-screen text-slate-100">
+    <main className={`relative min-h-screen text-slate-100 theme-${theme}`}>
       <div className="flex min-h-screen">
         {/* ── Sidebar ── */}
         <aside className="hidden w-[264px] shrink-0 flex-col border-r border-white/[0.06] bg-sidebar text-white shadow-command lg:flex">
           <div className="flex h-20 items-center gap-3 border-b border-white/[0.06] px-5">
-            <span className="relative flex h-11 w-11 items-center justify-center rounded-lg bg-gradient-to-br from-violet-500 via-purple-600 to-indigo-600 text-white shadow-lg shadow-violet-500/30">
+            <span className="relative flex h-11 w-11 items-center justify-center rounded-lg bg-theme-gradient-br text-white shadow-theme-glow">
               <Factory size={22} />
-              <span className="absolute inset-0 rounded-lg bg-violet-400/20 animate-glow-pulse" />
+              <span className="absolute inset-0 rounded-lg bg-theme-accent-glow animate-glow-pulse" />
             </span>
             <div className="min-w-0">
               <p className="truncate text-base font-bold tracking-normal">SteelGuard AI</p>
@@ -609,7 +616,7 @@ export default function Home() {
               <button
                 type="button"
                 onClick={() => void advanceStream()}
-                className="focus-ring mt-4 inline-flex h-9 w-full items-center justify-center gap-2 rounded-md bg-gradient-to-r from-violet-600 via-purple-500 to-indigo-500 text-xs font-bold text-white shadow-sm transition hover:shadow-glow-purple disabled:opacity-50"
+                className="focus-ring mt-4 inline-flex h-9 w-full items-center justify-center gap-2 rounded-md bg-theme-gradient text-xs font-bold text-white shadow-sm transition hover:shadow-theme-glow disabled:opacity-50"
                 disabled={busy || apiStatus === "offline"}
               >
                 <Zap size={14} />
@@ -630,7 +637,7 @@ export default function Home() {
             />
             <aside className="relative flex h-full w-[280px] flex-col bg-sidebar text-white shadow-command">
               <div className="flex h-20 items-center gap-3 border-b border-white/[0.06] px-5">
-                <span className="flex h-11 w-11 items-center justify-center rounded-lg bg-gradient-to-br from-violet-500 via-purple-600 to-indigo-600 text-white shadow-lg shadow-violet-500/30">
+                <span className="flex h-11 w-11 items-center justify-center rounded-lg bg-theme-gradient-br text-white shadow-theme-glow">
                   <Factory size={22} />
                 </span>
                 <div className="min-w-0">
@@ -683,12 +690,48 @@ export default function Home() {
                 <HeaderMetric label="Step" value={String(currentStep)} tone="coolant" />
               </div>
               <div className="flex items-center gap-2">
+                {/* Mill Room Theme Selector Dots */}
+                <div className="flex items-center gap-1.5 border-r border-white/[0.08] pr-3 mr-1">
+                  <button
+                    type="button"
+                    onClick={() => setTheme("violet")}
+                    title="Forge Black Theme (Purple)"
+                    className={`h-5 w-5 rounded-full border transition-all duration-300 ${
+                      theme === "violet"
+                        ? "border-violet-400 bg-purple-500 shadow-[0_0_10px_#a855f7] scale-110"
+                        : "border-transparent bg-purple-950/40 opacity-50 hover:opacity-100 hover:scale-105"
+                    }`}
+                    aria-label="Forge Black Theme"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setTheme("amber")}
+                    title="Control Room Amber Theme (Amber)"
+                    className={`h-5 w-5 rounded-full border transition-all duration-300 ${
+                      theme === "amber"
+                        ? "border-amber-400 bg-amber-500 shadow-[0_0_10px_#fbbf24] scale-110"
+                        : "border-transparent bg-amber-950/40 opacity-50 hover:opacity-100 hover:scale-105"
+                    }`}
+                    aria-label="Control Room Amber Theme"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setTheme("cyan")}
+                    title="Coolant Blue Theme (Cyan)"
+                    className={`h-5 w-5 rounded-full border transition-all duration-300 ${
+                      theme === "cyan"
+                        ? "border-cyan-400 bg-teal-400 shadow-[0_0_10px_#2dd4bf] scale-110"
+                        : "border-transparent bg-teal-950/40 opacity-50 hover:opacity-100 hover:scale-105"
+                    }`}
+                    aria-label="Coolant Blue Theme"
+                  />
+                </div>
                 <button
                   type="button"
                   title={live ? "Pause live stream" : "Resume live stream"}
                   onClick={() => setLive((value) => !value)}
                   className={`focus-ring inline-flex h-10 w-10 items-center justify-center rounded-md border transition-all duration-300 ${
-                    live ? "border-violet-500/30 bg-violet-500/10 text-violet-400 shadow-glow-purple hover:bg-violet-500/15" : "border-white/[0.08] bg-white/[0.04] text-slate-400 hover:border-violet-500/20 hover:text-violet-400"
+                    live ? "border-theme-accent bg-theme-accent-glow text-theme-accent shadow-theme-glow hover:bg-theme-accent-glow/80" : "border-white/[0.08] bg-white/[0.04] text-slate-400 hover:border-theme-accent/50 hover:text-theme-accent"
                   }`}
                 >
                   {live ? <Pause size={17} /> : <Play size={17} />}
@@ -839,7 +882,7 @@ export default function Home() {
                 value={formatNumber(dataset?.rows_loaded ?? summary.dataset_rows_loaded)}
                 detail={`Stream step ${currentStep}`}
                 icon={<Database size={20} />}
-                tone="violet"
+                tone="theme"
               />
             </section>
 
@@ -865,6 +908,15 @@ export default function Home() {
               onSelect={setSelectedId}
             />
 
+            <div id="maintenance" className="scroll-mt-24 animate-slide-up">
+              <MaintenanceTimeline
+                equipment={equipment}
+                healthMap={healthMap}
+                selectedId={selectedId}
+                onSelect={setSelectedId}
+              />
+            </div>
+
             <div className="grid gap-6 2xl:grid-cols-[minmax(0,1fr)_410px]">
               <div className="min-w-0 space-y-6">
                 <div className="grid gap-6 xl:grid-cols-[minmax(0,1.15fr)_minmax(320px,0.85fr)]">
@@ -885,11 +937,14 @@ export default function Home() {
                         title="Current readings"
                         detail={selectedHealth ? `${selectedHealth.metrics.length} backend-scored signals` : "Waiting for metrics"}
                       />
-                      <div className="mt-3 grid auto-rows-fr gap-4 sm:grid-cols-2 xl:grid-cols-3">
-                        {selectedHealth?.metrics.map((metric) => (
-                          <MetricTile key={metric.name} metric={metric} />
-                        ))}
-                        {!selectedHealth && [0, 1, 2].map((item) => <MetricSkeleton key={item} />)}
+                      <div className="mt-3">
+                        {selectedHealth ? (
+                          <SensorMetricsPanel metrics={selectedHealth.metrics} />
+                        ) : (
+                          <div className="grid auto-rows-fr gap-4 sm:grid-cols-2 xl:grid-cols-3">
+                            {[0, 1, 2].map((item) => <MetricSkeleton key={item} />)}
+                          </div>
+                        )}
                       </div>
                     </section>
                   </div>
@@ -909,6 +964,8 @@ export default function Home() {
                     onReport={generateReport}
                     onFeedback={recordFeedback}
                     busy={busy}
+                    onLock={lockFeedback}
+                    onUnlock={unlockFeedback}
                   />
                 </div>
                 <div id="knowledge-base" className="scroll-mt-24">
@@ -1021,9 +1078,9 @@ function SidebarLink({
         active ? "border-white/[0.1] bg-white/[0.08] text-white shadow-insetline" : "border-transparent text-slate-400 hover:border-white/[0.06] hover:bg-white/[0.04] hover:text-white"
       }`}
     >
-      {active && <span className="absolute inset-y-2 left-0 w-1 rounded-r-full bg-violet-400 shadow-[0_0_8px_rgba(167,139,250,0.5)]" />}
+      {active && <span className="absolute inset-y-2 left-0 w-1 rounded-r-full theme-active-indicator" />}
       <span className="flex min-w-0 items-center gap-3">
-        <Icon size={17} className={active ? "text-violet-400" : undefined} />
+        <Icon size={17} className={active ? "text-theme-accent" : undefined} />
         <span className="truncate">{label}</span>
       </span>
       {badge && <span className="rounded-full bg-red-500 px-2 py-0.5 text-[10px] font-bold text-white">{badge}</span>}
@@ -1128,7 +1185,7 @@ function KpiCard({
   suffix?: string;
   detail: string;
   icon: ReactNode;
-  tone: "coolant" | "red" | "amber" | "blue" | "violet";
+  tone: "coolant" | "red" | "amber" | "blue" | "violet" | "theme";
 }) {
   const toneStyles = {
     coolant: {
@@ -1150,6 +1207,10 @@ function KpiCard({
     violet: {
       bar: "bg-gradient-to-r from-violet-500 to-purple-500",
       icon: "border-violet-400/25 bg-violet-500/10 text-violet-400"
+    },
+    theme: {
+      bar: "bg-theme-gradient",
+      icon: "border-theme-accent bg-theme-accent-glow text-theme-accent"
     }
   };
 
@@ -1231,7 +1292,7 @@ function FlowStep({
 }) {
   return (
     <article className="panel flex min-h-[108px] items-start gap-3 p-4">
-      <span className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-md border ${state === "complete" ? "border-violet-400/25 bg-violet-500/10 text-violet-400" : "border-white/[0.08] bg-white/[0.04] text-slate-500"}`}>
+      <span className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-md border ${state === "complete" ? "border-theme-accent bg-theme-accent-glow text-theme-accent" : "border-white/[0.08] bg-white/[0.04] text-slate-500"}`}>
         {icon}
       </span>
       <div className="min-w-0">
@@ -1662,12 +1723,28 @@ function AgentTrace({ recommendation }: { recommendation: Recommendation | null 
         </span>
       </div>
       <div className="mt-4 grid gap-3 md:grid-cols-2 xl:grid-cols-4">
-        {trace.slice(0, 4).map((node, index) => (
-          <article key={`${String(node.node)}-${index}`} className="card-muted p-3">
-            <p className="text-xs font-bold uppercase tracking-wide text-coolant-400">{String(node.node).replaceAll("_", " ")}</p>
-            <p className="mt-2 line-clamp-4 text-xs leading-5 text-slate-400">{String(node.summary)}</p>
-          </article>
-        ))}
+        {trace.map((node, index) => {
+          const status = String((node as Record<string, unknown>).status ?? "complete");
+          const isLlm = String(node.node) === "llm_reasoning";
+          const labelColor = isLlm
+            ? status === "complete" ? "text-emerald-400" : "text-amber-400"
+            : "text-coolant-400";
+          return (
+            <article key={`${String(node.node)}-${index}`} className="card-muted p-3">
+              <div className="flex items-center gap-2">
+                <p className={`text-xs font-bold uppercase tracking-wide ${labelColor}`}>{String(node.node).replaceAll("_", " ")}</p>
+                {isLlm && (
+                  <span className={`inline-block rounded px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wider ${
+                    status === "complete" ? "bg-emerald-500/15 text-emerald-400" : "bg-amber-500/15 text-amber-400"
+                  }`}>
+                    {status === "complete" ? "LLM" : "Template"}
+                  </span>
+                )}
+              </div>
+              <p className="mt-2 line-clamp-4 text-xs leading-5 text-slate-400">{String(node.summary)}</p>
+            </article>
+          );
+        })}
         {!trace.length && <p className="text-sm text-slate-500">Waiting for agent reasoning.</p>}
       </div>
     </section>

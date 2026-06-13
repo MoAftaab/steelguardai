@@ -87,6 +87,46 @@ export function IngestionPanel({ equipment, selectedId, busy, onSelectEquipment,
     if (!selectedEquipment) return;
     setError(null);
     setLastUpdate(null);
+
+    // ── Validate required fields before sending to backend ──
+    if (mode === "document" && !docText.trim()) {
+      setError("Document text is required. Add the content you want to ingest.");
+      return;
+    }
+    if (mode === "log" && !logSummary.trim()) {
+      setError("Log summary is required. Describe the maintenance event.");
+      return;
+    }
+    if (mode === "fault" && !faultMessage.trim()) {
+      setError("Fault message is required. Describe the fault event.");
+      return;
+    }
+    if (mode === "alert" && !alertMessage.trim()) {
+      setError("Alert message is required. Describe the abnormality.");
+      return;
+    }
+    if (mode === "sensor") {
+      try {
+        const parsed = JSON.parse(metricsJson);
+        if (typeof parsed !== "object" || parsed === null || Array.isArray(parsed)) {
+          setError("Metrics must be a JSON object, e.g. {\"temperature_c\": 94}.");
+          return;
+        }
+        const badKeys = Object.entries(parsed).filter(([, v]) => typeof v !== "number");
+        if (badKeys.length > 0) {
+          setError(`All metric values must be numbers. Non-numeric keys: ${badKeys.map(([k]) => k).join(", ")}`);
+          return;
+        }
+      } catch {
+        setError("Invalid JSON in Metrics field. Check for missing commas, brackets, or trailing commas.");
+        return;
+      }
+    }
+    if (mode === "spare" && !spareName.trim()) {
+      setError("Spare part name is required.");
+      return;
+    }
+
     try {
       if (mode === "document") {
         await onIngest("document", {
@@ -160,7 +200,7 @@ export function IngestionPanel({ equipment, selectedId, busy, onSelectEquipment,
             {
               id: spareId.trim() || `spare-ui-${Date.now()}`,
               equipment_id: selectedEquipment.id,
-              name: spareName.trim() || "Uploaded spare part",
+              name: spareName.trim(),
               stock: Math.max(0, Number(spareStock) || 0),
               lead_time_days: Math.max(0, Number(spareLeadTime) || 0),
               supplier: spareSupplier.trim() || "Unknown supplier",
@@ -169,7 +209,6 @@ export function IngestionPanel({ equipment, selectedId, busy, onSelectEquipment,
           ]
         });
       }
-      onSelectEquipment(selectedEquipment.id);
       setLastUpdate(`${currentMode.label} saved for ${selectedEquipment.name}. Check ${currentMode.target} after refresh.`);
     } catch (caught) {
       setError(caught instanceof Error ? caught.message : "Unable to ingest payload.");

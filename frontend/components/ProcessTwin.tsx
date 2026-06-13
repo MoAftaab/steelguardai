@@ -14,6 +14,137 @@ interface Props {
 export function ProcessTwin({ equipment, healthMap, selectedId, onSelect }: Props) {
   return (
     <section className="panel p-5">
+      {/* SVG SCADA Pipeline Flow */}
+      <div className="mb-6 rounded-lg bg-slate-950/60 p-4 border border-white/[0.04] relative overflow-hidden">
+        <svg className="w-full h-24" viewBox="0 0 800 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <style>{`
+            @keyframes flow-dash {
+              to {
+                stroke-dashoffset: -20;
+              }
+            }
+            .animate-flow-dash {
+              animation: flow-dash 1.5s linear infinite;
+            }
+          `}</style>
+          
+          {/* Animated Flowing Telemetry Paths */}
+          <path
+            d="M 160 50 L 400 50"
+            stroke="rgba(255,255,255,0.06)"
+            strokeWidth="4"
+            strokeLinecap="round"
+          />
+          <path
+            d="M 160 50 L 400 50"
+            stroke="url(#flowGradient)"
+            strokeWidth="4"
+            strokeLinecap="round"
+            strokeDasharray="6 10"
+            className="animate-flow-dash"
+          />
+
+          <path
+            d="M 400 50 L 640 50"
+            stroke="rgba(255,255,255,0.06)"
+            strokeWidth="4"
+            strokeLinecap="round"
+          />
+          <path
+            d="M 400 50 L 640 50"
+            stroke="url(#flowGradient)"
+            strokeWidth="4"
+            strokeLinecap="round"
+            strokeDasharray="6 10"
+            className="animate-flow-dash"
+          />
+
+          <defs>
+            <linearGradient id="flowGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stopColor="#14b8a6" />
+              <stop offset="50%" stopColor="#a855f7" />
+              <stop offset="100%" stopColor="#f43f5e" />
+            </linearGradient>
+          </defs>
+
+          {/* Render click-active equipment nodes */}
+          {equipment.map((item, index) => {
+            const health = healthMap[item.id];
+            const selected = selectedId === item.id;
+            const severity = health?.risk_level ?? item.status;
+            
+            // Status colors mapping
+            const colorClass = 
+              severity === "critical" ? "#f43f5e" :
+              severity === "high" ? "#fb923c" :
+              severity === "medium" ? "#fbbf24" :
+              "#10b981";
+
+            const xPos = index === 0 ? 160 : index === 1 ? 400 : 640;
+
+            return (
+              <g 
+                key={item.id} 
+                className="cursor-pointer group"
+                onClick={() => onSelect(item.id)}
+              >
+                {/* Selected Glowing Halo */}
+                {selected && (
+                  <circle
+                    cx={xPos}
+                    cy="50"
+                    r="22"
+                    fill="none"
+                    stroke={colorClass}
+                    strokeWidth="2.5"
+                    className="animate-pulse"
+                    style={{ opacity: 0.5 }}
+                  />
+                )}
+                {/* Outer ring */}
+                <circle
+                  cx={xPos}
+                  cy="50"
+                  r="18"
+                  fill="#0f172a"
+                  stroke={selected ? colorClass : "rgba(255,255,255,0.12)"}
+                  strokeWidth={selected ? "3" : "1.5"}
+                  className="transition-all duration-300 group-hover:stroke-coolant-400"
+                />
+                {/* Inner status dot */}
+                <circle
+                  cx={xPos}
+                  cy="50"
+                  r="8"
+                  fill={colorClass}
+                  className={severity === "critical" ? "animate-pulse" : ""}
+                />
+                {/* Label */}
+                <text
+                  x={xPos}
+                  y="88"
+                  textAnchor="middle"
+                  fill={selected ? "#ffffff" : "#94a3b8"}
+                  className="text-[10px] font-bold tracking-wide transition-colors font-sans"
+                >
+                  {item.area}
+                </text>
+                {/* Small Type indicator */}
+                <text
+                  x={xPos}
+                  y="24"
+                  textAnchor="middle"
+                  fill={colorClass}
+                  className="text-[9px] font-mono tracking-wider transition-colors uppercase font-bold"
+                >
+                  {severity}
+                </text>
+              </g>
+            );
+          })}
+        </svg>
+      </div>
+
       <div className="flex flex-col gap-4 xl:flex-row xl:items-stretch xl:justify-between">
         <div className="flex min-w-[230px] flex-col justify-between rounded-md border border-white/[0.08] bg-white/[0.04] p-4">
           <div>

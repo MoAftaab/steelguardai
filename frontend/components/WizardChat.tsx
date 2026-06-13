@@ -1,6 +1,6 @@
 "use client";
 
-import { Bot, ClipboardList, MoreVertical, Plus, RotateCcw, Send, User } from "lucide-react";
+import { Bot, ClipboardList, Mic, MoreVertical, Plus, RotateCcw, Send, User } from "lucide-react";
 import { FormEvent, useEffect, useRef, useState } from "react";
 import type { ChatResponse } from "@/lib/types";
 
@@ -131,7 +131,49 @@ export function WizardChat({ equipmentId, equipmentName, alertId, onResponse, on
   const [input, setInput] = useState("");
   const [busy, setBusy] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [isListening, setIsListening] = useState(false);
   const messageListRef = useRef<HTMLDivElement>(null);
+  const recognitionRef = useRef<any>(null);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+      if (SpeechRecognition) {
+        const rec = new SpeechRecognition();
+        rec.continuous = false; // Stop after speaking a sentence
+        rec.interimResults = false;
+        rec.lang = "en-US";
+
+        rec.onresult = (event: any) => {
+          const transcript = event.results[0][0].transcript;
+          setInput(transcript);
+        };
+
+        rec.onerror = (event: any) => {
+          console.error("Speech recognition error", event);
+          setIsListening(false);
+        };
+
+        rec.onend = () => {
+          setIsListening(false);
+        };
+
+        recognitionRef.current = rec;
+      }
+    }
+  }, []);
+
+  const toggleListening = () => {
+    if (!recognitionRef.current) return;
+    if (isListening) {
+      recognitionRef.current.stop();
+      setIsListening(false);
+    } else {
+      setInput("");
+      recognitionRef.current.start();
+      setIsListening(true);
+    }
+  };
 
   useEffect(() => {
     setMessages([starterMessage(equipmentId, equipmentName, alertId)]);
@@ -261,12 +303,26 @@ export function WizardChat({ equipmentId, equipmentName, alertId, onResponse, on
             onChange={(event) => setInput(event.target.value)}
             className="field-control min-w-0 flex-1 text-sm"
             aria-label="Maintenance query"
-            placeholder="Ask a maintenance question..."
+            placeholder={isListening ? "Listening..." : "Ask a maintenance question..."}
           />
+          {recognitionRef.current && (
+            <button
+              type="button"
+              onClick={toggleListening}
+              title={isListening ? "Stop listening" : "Speak question"}
+              className={`focus-ring inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-md border transition-all duration-300 ${
+                isListening
+                  ? "border-red-500/40 bg-red-500/10 text-red-400 animate-pulse shadow-[0_0_15px_rgba(239,68,68,0.2)] hover:bg-red-500/20"
+                  : "border-white/[0.08] bg-white/[0.04] text-slate-400 hover:border-coolant-500/30 hover:text-coolant-400"
+              }`}
+            >
+              <Mic size={18} />
+            </button>
+          )}
           <button
             type="submit"
             title="Send query"
-            disabled={busy}
+            disabled={busy || !input.trim()}
             className="focus-ring inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-gradient-to-br from-coolant-500 to-coolant-600 text-white shadow-sm transition-all duration-300 hover:shadow-[0_0_20px_rgba(20,184,166,0.3)] disabled:opacity-60"
           >
             <Send size={18} />
