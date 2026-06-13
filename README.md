@@ -846,40 +846,7 @@ SteelGuard AI uses **tree-based ensemble classifiers** (ExtraTreesClassifier and
 
 ### Training Pipeline Architecture
 
-```mermaid
-flowchart TD
-    A["UCI AI4I Dataset<br/>(10,000 rows, 14 features)"] --> B["Stratified Train/Test Split<br/>(78% Train / 22% Test)"]
-    B --> C1["Training Set<br/>(~7,800 rows)"]
-    B --> C2["Test Set<br/>(~2,200 rows)"]
-    
-    C1 --> D["Feature Engineering & Mapping<br/>(Sensor signals, thresholds, criticality, asset one-hot)"]
-    C2 --> D
-    
-    D --> E["Cross-monitored Assets Expansion<br/>(23,400+ training samples)"]
-    
-    E --> F1["ExtraTrees Classifier<br/>(220 trees, max_depth=16)"]
-    E --> F2["Random Forest Classifier<br/>(180 trees, max_depth=14)"]
-    
-    F1 --> G1["Threshold Optimization<br/>(65 candidates: 0.08 - 0.72)"]
-    F2 --> G2["Threshold Optimization<br/>(65 candidates: 0.08 - 0.72)"]
-    
-    G1 --> H["Model Evaluation & Ranking<br/>(AUPRC ➔ F1 ➔ Bal.Acc)"]
-    G2 --> H
-    
-    H --> I["Best Model Auto-Selection"]
-    I --> J["Model Serialization<br/>(ai4i_failure_model.joblib)"]
-    
-    style A fill:#0f172a,stroke:#38bdf8,stroke-width:2px,color:#fff
-    style B fill:#0f172a,stroke:#38bdf8,stroke-width:2px,color:#fff
-    style D fill:#0f172a,stroke:#818cf8,stroke-width:2px,color:#fff
-    style E fill:#0f172a,stroke:#818cf8,stroke-width:2px,color:#fff
-    style F1 fill:#1e1b4b,stroke:#818cf8,stroke-width:2px,color:#fff
-    style F2 fill:#1e1b4b,stroke:#818cf8,stroke-width:2px,color:#fff
-    style G1 fill:#0f172a,stroke:#f59e0b,stroke-width:2px,color:#fff
-    style G2 fill:#0f172a,stroke:#f59e0b,stroke-width:2px,color:#fff
-    style I fill:#0f172a,stroke:#10b981,stroke-width:2px,color:#fff
-    style J fill:#0f172a,stroke:#10b981,stroke-width:2px,color:#fff
-```
+![Training Pipeline Architecture](docs/screenshots/training_pipeline.png)
 
 ---
 
@@ -1191,47 +1158,7 @@ SteelGuard AI uses **tree-based ensemble classifiers** (ExtraTreesClassifier and
 
 ### Training Pipeline Architecture
 
-```
-UCI AI4I Dataset (10,000 rows)
-        │
-        ▼
-  78/22 Stratified Split
-        │
-  ┌─────┴─────┐
-  ▼           ▼
-Training    Test
-(~7,800)   (~2,200)
-  │           │
-  ▼           ▼
-  ┌───────────────────────────────┐
-  │  Feature Engineering          │
-  │  • 9 sensor signals           │
-  │  • 9 threshold risk scores    │
-  │  • 1 asset criticality        │
-  │  • 3 equipment one-hot        │
-  │  × 3 equipment variants       │
-  │  = 23,400+ training samples   │
-  └───────────┬───────────────────┘
-              │
-    ┌─────────┼─────────┐
-    ▼                   ▼
-ExtraTrees         RandomForest
-(220 trees)        (180 trees)
-    │                   │
-    ▼                   ▼
- Threshold           Threshold
- Optimization        Optimization
- (65 candidates)     (65 candidates)
-    │                   │
-    └─────────┬─────────┘
-              ▼
-       Best Model Selected
-       (by AUPRC → F1 → Bal.Acc)
-              │
-              ▼
-     Serialized to .joblib
-     (artifacts/ai4i_failure_model.joblib)
-```
+![Training Pipeline Architecture](docs/screenshots/training_pipeline.png)
 
 ---
 
