@@ -32,6 +32,8 @@ import {
   Zap
 } from "lucide-react";
 import { api } from "@/lib/api";
+import SparksCanvas from "@/components/SparksCanvas";
+
 
 type FeatureTab = "diagnostics" | "copilot" | "recommendations" | "twin";
 type ArchTab = "system-flow" | "research-blueprint";
@@ -391,11 +393,18 @@ export default function LandingPage() {
           WebkitMaskImage: "linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,0.3) 60%, rgba(0,0,0,0) 100%)"
         }}
       />
+
+      {/* Sparks and Embers Background Animation */}
+      <div className="absolute inset-x-0 top-0 h-[850px] overflow-hidden pointer-events-none z-0">
+        <SparksCanvas />
+      </div>
       
       {/* Background Neon Orbs */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-[600px] pointer-events-none overflow-hidden z-0">
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-[800px] pointer-events-none overflow-hidden z-0">
         <div className="absolute top-[-20%] left-[15%] w-[45%] h-[55%] rounded-full bg-purple-600/10 blur-[130px] animate-glow-pulse" />
         <div className="absolute top-[-15%] right-[15%] w-[45%] h-[55%] rounded-full bg-coolant-600/15 blur-[130px] animate-glow-pulse [animation-delay:1.2s]" />
+        {/* Molten Forge Heat Glow Orb */}
+        <div className="absolute bottom-[5%] left-[20%] w-[60%] h-[45%] rounded-full bg-forge-600/15 blur-[140px] animate-glow-pulse [animation-delay:0.6s]" />
       </div>
 
       {/* Navigation Header */}
